@@ -1,0 +1,17 @@
+Login:
+Refugee-Generate unique id based on the location using a separate web portal
+NGO Register
+
+To Track and to make sure that refugees are not clustered in one place there will be soft boundary for each region and if number of refugees in a region exceed a new area will be allocated along with a new id
+
+Refugee side Interface consist of following feature:
+1) See nearby shelters for aid such as food, shelter, health
+2) Raise an issue regarding the shelters or any problem faced
+3) Register/attend donation drive or events hosted by NGO(Note: there will be limit on number of such events a refugee can attend and also a cooldown period after attending specified number of events)
+4) There will be navigation system to locate all specified things
+5) Providing multilingual support
+
+NGO side:
+1) Register
+2) List events
+3) receive feedback
