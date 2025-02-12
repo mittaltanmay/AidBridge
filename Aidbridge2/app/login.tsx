@@ -16,9 +16,10 @@ const Login = () => {
     <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-2'>
       <Text className='text-white text-lg font-medium'>Login</Text>
     </TouchableOpacity>
-    <View className='flex flex-row'>
+    <View className='flex flex-row items-center gap-2'>
     <Text className='text-xl'>Don't Have account?</Text>
-\    </View>
+    <Link href="../register" className='text-blue-500 text-xl'>Regsiter</Link>
+    </View>
   </View>
   )
 }

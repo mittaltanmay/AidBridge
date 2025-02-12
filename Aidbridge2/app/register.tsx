@@ -3,9 +3,12 @@ import React from 'react'
 
 const Register = () => {
   return (
+    <>
+    <View className="circle"></View>
     <View>
       <Text>Register</Text>
     </View>
+    </>
   )
 }
 
