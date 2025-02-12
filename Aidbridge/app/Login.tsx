@@ -18,7 +18,7 @@ const Login = () => {
       </TouchableOpacity>
       <View className='flex flex-row'>
       <Text className='text-xl'>Don't Have account?</Text>
-      <Link href="/refregister" asChild>Register</Link>
+      <Link href="/refregister" >Register</Link>
       </View>
     </View>
   )
