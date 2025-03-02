@@ -4,7 +4,18 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        outfit: ["outfit", "sans-serif"],
+        "outfit-black": ["outfit-black", "sans-serif"],
+        "outfit-bold": ["outfit-bold", "sans-serif"],
+        "outfit-extraBold": ["outfit-extraBold", "sans-serif"],
+        "outfit-extralight":["outfit-extralight","san-serif"],
+        "outfit-light":["outfit-light","sans-serif"],
+        "outfit-medium":["outift-medium","sans-serif"],
+        "outfit-thin":["outfit-thin","sans-serif"]
+    },
+  },
   },
   plugins: [],
 }
