@@ -14,10 +14,7 @@ export default function RootLayout() {
     'outfit-thin':require("./../assets/fonts/Outfit-Thin.ttf")
   })
   return (
-    <Stack>
-    <Stack.Screen name="index" options={{ title: "Home" }} />
-    <Stack.Screen name="login" options={{ title: "Login" }} /> 
-    <Stack.Screen name="register" options={{title:"Register"}}/>
+    <Stack screenOptions={{headerShown:false}}>
   </Stack>
   );
 }

@@ -1,40 +1,51 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
-import {LinearGradient} from "expo-linear-gradient"
+import { StyleSheet,Dimensions } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+const { width, height } = Dimensions.get("window");
 export default function Index() {
+  const router=useRouter();
   return (
     <>
-    {/* <View className="absolute top-[-15] left-[-25] w-40 h-40 bg-green-500  rounded-full backdrop-blur-xl" />
-    <View className="absolute bottom-[-15] right-[-25] w-40 h-40 bg-green-500 rounded-full" /> */}
-    {/* <View className="absolute inset-0 bg-transparent shadow-2xl shadow-green-400" /> */}
-    
-    <View className="flex gap-20 ">
     <LinearGradient
-        colors={["rgba(34, 197, 94, 0.3)", "transparent", "rgba(34, 197, 94, 0.3)"]}
-        locations={[0, 0.5, 1]}
-        className="absolute inset-0"
+        colors={["lightgreen", "transparent"]}
+        locations={[0.2, 0.7]}
+        style={[styles.shadowOverlay, { top: 0 }]}
       />
-      <Text className="text-5xl font-outfit-bold text-center mt-10 underline">WELCOME</Text>
-      <View className="flex flex-col justify-center items-center gap-5 mt-20">
+    <View className="flex gap-20 px-5 py-5">
+      <Text className="text-5xl font-outfit-bold text-center  mt-5 underline">WELCOME</Text>
+      <View className="flex flex-col justify-center items-center gap-5 mt-20" >
         <View className='flex flex-row gap-5 items-center'>
-          <Link href="../login" asChild>
-            <TouchableOpacity className="Button">
-              <Text className="font-Bold text-2xl text-white">Refugee</Text>
+            <TouchableOpacity className="Button" onPress={()=>router.push('/auth/register')}>
+              <Text className="font-outfit-bold text-2xl text-white">Refugee</Text>
             </TouchableOpacity>
-          </Link>
-          <Text className="text-2xl font-medium">Looking For Help</Text>
+          <Text className="text-2xl font-outfit-medium">Looking For Help</Text>
         </View>
-        <Text className="text-3xl font-bold">OR</Text>
-        <View className='flex flex-row gap-5 items-center -ml-[55px]'>
-          <Link href="../login" asChild>
-          <TouchableOpacity className="Button1">
-            <Text className="font-Bold text-2xl text-white">NGO</Text>
+        <Text className="text-3xl font-outfit-bold">OR</Text>
+        <View className='flex flex-row gap-5 items-center -ml-[49px]'>
+          <TouchableOpacity className="Button1" onPress={()=>router.push('/auth/register')}>
+            <Text className="font-outfit-bold text-2xl text-white">NGO</Text>
           </TouchableOpacity>
-          </Link>
-          <Text className="text-2xl font-medium">Here to Help</Text>
+          <Text className="text-2xl font-outfit-medium">Here to Help</Text>
         </View>
       </View>
+      <Text className="text-center -mt-5 font-outfit-medium text-lg">Already Have an Account?
+        <TouchableOpacity onPress={()=>(router.push('/auth/login'))}><Text className="font-outfit-medium text-blue-400 -mb-2 text-lg"> LogIn</Text></TouchableOpacity>
+      </Text>
     </View>
+    <LinearGradient
+        colors={["transparent", "lightgreen"]}
+        locations={[0.2, 0.7]}
+        style={[styles.shadowOverlay, { bottom: 0 }]}
+      />
     </>
   );
 }
+const styles=StyleSheet.create({
+  shadowOverlay: {
+    position: "absolute",
+    width: "100%",
+    height: height * 0.15, // Covers only 12% of the screen height at top and bottom
+    zIndex: 0,
+  },
+})
