@@ -1,6 +1,6 @@
 import { Link, useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
-import { StyleSheet,Dimensions } from "react-native";
+import { StyleSheet,Dimensions,Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 const { width, height } = Dimensions.get("window");
 export default function Index() {
@@ -12,9 +12,10 @@ export default function Index() {
         locations={[0.2, 0.7]}
         style={[styles.shadowOverlay, { top: 0 }]}
       />
-    <View className="flex gap-20 px-5 py-5">
-      <Text className="text-5xl font-outfit-bold text-center  mt-5 underline">WELCOME</Text>
-      <View className="flex flex-col justify-center items-center gap-5 mt-20" >
+    <View className="flex gap-20 px-5 py-5 items-center">
+      <Image className="w-[150px] h-[150px] mt-5 border" source={require('./../assets/images/logo7.webp')} />
+      <Text className="text-5xl font-outfit-bold text-center underline">WELCOME</Text>
+      <View className="flex flex-col justify-center items-center gap-5 mt-15" >
         <View className='flex flex-row gap-5 items-center'>
             <TouchableOpacity className="Button" onPress={()=>router.push('/auth/register')}>
               <Text className="font-outfit-bold text-2xl text-white">Refugee</Text>
