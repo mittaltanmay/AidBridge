@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity,KeyboardAvoidingView, Platform ,Keyboard} from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useRouter } from 'expo-router'
 import { StyleSheet,Dimensions,Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -7,6 +7,8 @@ const { width, height } = Dimensions.get("window");
 
 const Login = () => {
   const router=useRouter();
+  const [username,setusername]=useState('');
+  const [password,setpassword]=useState('');
   return (
     <>
       <LinearGradient
@@ -18,14 +20,16 @@ const Login = () => {
       <View className='flex flex-col justify-center items-center px-10'>
         <Image className="w-[150px] h-[150px] mt-12 border" source={require('./../../assets/images/logo7.webp')} />
         <Text className='text-5xl font-outfit-bold mt-14'>Login</Text>
-        <View className='flex flex-col gap-2 mt-5 p-3 mb-8'>
+        <View className='flex flex-col gap-2 mt-5 p-3 mb-5'>
           <Text className='text-lg font-outfit-medium'>Username</Text>
-          <TextInput className="bg-white w-[300px] rounded-md border"></TextInput>
+          <TextInput className="bg-white w-[300px] rounded-md border" value={username} onChangeText={text=>setusername(text)}></TextInput>
           <Text className='text-lg font-outfit-medium'>Password</Text>
-          <TextInput className="bg-white w-[300px] rounded-md border"></TextInput>
+          <TextInput secureTextEntry={true} className="bg-white w-[300px] rounded-md border" value={password} onChangeText={text=>setpassword(text)}></TextInput>
         </View>
-        <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-2'>
-          <Text className='text-white text-lg font-outfit-medium'>Login</Text>
+        <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-3'>
+          <Text className='text-white text-lg font-outfit-bold' onPress={()=>{console.log(username)
+            console.log(password)
+          }}>Login</Text>
         </TouchableOpacity>
         <View className='flex flex-row items-center gap-2'>
           <Text className='text-lg'>Don't Have account?
