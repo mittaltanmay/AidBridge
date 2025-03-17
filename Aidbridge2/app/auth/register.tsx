@@ -3,22 +3,23 @@ import React, { useState } from 'react'
 import { StyleSheet,Dimensions,Image} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {state,locations} from "./../../utils/loaction"
-import { Picker } from '@react-native-picker/picker' 
+import { Picker } from '@react-native-picker/picker'
+import {passwordgenerator} from "./../../utils/passwordGenerator" 
 const { width, height } = Dimensions.get("window");
 
 const Register = () => {
   const [name,setName]=useState('');
-  const [contact,setcontact]=useState('');
   const [selectedState, setSelectedState] = useState('');
   const [sublocation,setsublocation]=useState('');
+  const [genenratepassword,setgeneratepassword]=useState('');
   function handleregister()
   {
-    if(!state || !contact || !selectedState || !sublocation) return;
-    console.log(name,contact,selectedState,sublocation);
+    if(!state || !selectedState || !sublocation) return;
+    const password=passwordgenerator(name,selectedState,sublocation);
+    console.log(name,selectedState,sublocation,password);
     setName('');
     setSelectedState('');
     setsublocation('');
-    setcontact('');
     return;
   }
   return (
@@ -29,11 +30,11 @@ const Register = () => {
         style={[styles.shadowOverlay, { top: 0 }]}
       />
       <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':'height'} style={{flex:1}}>
-      <View className='p-10 flex flex-col items-center justify-center gap-5'>
+      <View className='p-10 flex flex-col items-center justify-center gap-10'>
         <Image className="w-[150px] h-[150px] mt-10 border" source={require('./../../assets/images/logo7.webp')} />
         <Text className='text-5xl font-outfit-bold'>Register</Text>
         <View className='flex flex-col gap-10'>
-          <TextInput className='bg-white border w-[300px] h-[50px px-5 rounded-md font-outfit-medium'value={name}  onChangeText={setName} placeholder='Name'></TextInput>
+          <TextInput className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium'value={name}  onChangeText={setName} placeholder='Name'></TextInput>
           <View className="bg-white border w-[300px] h-fit rounded-md">
               <Picker
                 selectedValue={selectedState}
@@ -54,10 +55,9 @@ const Register = () => {
             </Picker>
           </View>
         )}
-        <TextInput className='bg-white px-5 border w-[300px]  h-[50px] rounded-md font-outfit-medium' placeholder='Contact' keyboardType='numeric' value={contact} onChangeText={setcontact}></TextInput>
         </View>
         <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
-          <Text className='text-white font-outfit-bold text-xl'>Register</Text>
+          <Text className='text-white font-outfit-bold text-xl'>Verify & Register</Text>
         </TouchableOpacity>
       </View>
       </KeyboardAvoidingView>
