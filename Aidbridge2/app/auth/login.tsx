@@ -27,9 +27,7 @@ const Login = () => {
           <TextInput secureTextEntry={true} className="bg-white w-[300px] rounded-md border" value={password} onChangeText={text=>setpassword(text)}></TextInput>
         </View>
         <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-3'>
-          <Text className='text-white text-lg font-outfit-bold' onPress={()=>{console.log(username)
-            console.log(password)
-          }}>Login</Text>
+          <Text className='text-white text-lg font-outfit-bold' onPress={()=>router.push('../refugeepage/app')}>Login</Text>
         </TouchableOpacity>
         <View className='flex flex-row items-center gap-2'>
           <Text className='text-lg'>Don't Have account?
