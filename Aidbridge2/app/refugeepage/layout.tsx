@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faHouse,faLocationDot,faUsersRectangle,faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
 import { } from '@fortawesome/free-regular-svg-icons';
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-// import {faMapLocationDot} from '@fontawesome/free-solid-scg-icons/famaplocationdot'
 const { width, height } = Dimensions.get("window");
 interface LayoutProps {
   children: ReactNode;
@@ -25,16 +24,18 @@ export default function Layout ({children}:LayoutProps)
   function footer()
   {
     return(
-      <View className='z-10 bg-white flex flex-row border-t border-t-black h-[70px] px-2 py-2 items-center justify-around'>
-          <View className='flex flex-col gap-1 items-center justify-center'>
-            <Pressable onPress={()=>{console.log("this is home")}}>
-              <FontAwesomeIcon icon={faHouse} size={30}/>
+      <View className='z-10 bg-slate-50 flex flex-row border-t border-t-black h-[70px] px-2 py-2 items-center justify-around'>
+          <View className={'flex flex-col gap-1 items-center justify-center' + (currpage==='Home'?' opacity-[0.6]':'') }>
+            <Pressable onPress={()=>{setcurrpage('Home')}}>
+                <FontAwesomeIcon icon={faHouse} size={30}/>
             </Pressable>
             <Text className='font-outfit-medium text-sm'>Home</Text>
           </View>
           
-          <View className='flex flex-col gap-1 items-center justify-center'>
-            <FontAwesomeIcon icon={faLocationDot} size={30}/>
+          <View className={'flex flex-col gap-1 items-center justify-center ' + (currpage==='LocateNgo'?' opacity-[0.6]':'')}>
+            <Pressable onPress={()=>{setcurrpage('LocateNgo')}}>
+              <FontAwesomeIcon icon={faLocationDot} size={30}/>
+            </Pressable>
             <Text className='font-outfit-medium text-sm'>Locate NGO</Text>
           </View>
           
