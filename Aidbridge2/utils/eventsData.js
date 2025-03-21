@@ -3,14 +3,14 @@ export const eventsData = [
       name: "Back-to-School Drive",
       ngo: "Save the Children India",
       description: "Providing school supplies and books to refugee children to support their education.",
-      date: "10-04-2025",
-      timing: "10:00 AM - 4:00 PM"
+      date: "21-03-2025",
+      timing: "10:00 PM - 11:00 PM"
     },
     {
       name: "Health Check-up Camp",
       ngo: "BOSCO",
       description: "Free medical check-ups, consultations, and medicines for refugee families.",
-      date: "15-04-2025",
+      date: "15-03-2025",
       timing: "9:00 AM - 3:00 PM"
     },
     {

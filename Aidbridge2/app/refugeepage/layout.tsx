@@ -44,11 +44,11 @@ export default function Layout ({children,currpage,setcurrpage}:LayoutProps)
             <Text className='font-outfit-medium text-sm'>Locate NGO</Text>
           </View>
           
-          <View className={'flex flex-col gap-1 items-center justify-center ' + (currpage==='events'?' opacity-[0.6]':"")}>
+          <View className={'flex flex-col gap-1 mt-1 items-center justify-center ' + (currpage==='events'?' opacity-[0.6]':"")}>
             <Pressable hitSlop={1} onPress={()=>{setcurrpage('events')}}>
               <FontAwesomeIcon icon={faUsersRectangle} size={30}/>
             </Pressable>
-            <Text className='font-outfit-medium text-sm'>Events</Text>
+            <Text className='font-outfit-medium text-sm mb-2'>Events</Text>
           </View>
           
           <View className={'flex flex-col gap-1 items-center justify-center ' + (currpage==='issue'?' opacity-[0.6]':"")}>
