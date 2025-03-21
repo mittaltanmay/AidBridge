@@ -39,3 +39,7 @@
     border:solid;
     border-color:white;
  }
+ .textstroke
+ {
+   -webkit-text-stroke:1px black;
+ }

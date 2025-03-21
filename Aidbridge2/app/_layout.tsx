@@ -11,7 +11,8 @@ export default function RootLayout() {
     'outfit-extralight':require("./../assets/fonts/Outfit-ExtraLight.ttf"),
     'outfit-light':require("./../assets/fonts/Outfit-Light.ttf"),
     'outfit-medium':require("./../assets/fonts/Outfit-Medium.ttf"),
-    'outfit-thin':require("./../assets/fonts/Outfit-Thin.ttf")
+    'outfit-thin':require("./../assets/fonts/Outfit-Thin.ttf"),
+    'outfit-semibold':require("./../assets/fonts/Outfit-SemiBold.ttf")
   })
   return (
     <Stack screenOptions={{headerShown:false}}>

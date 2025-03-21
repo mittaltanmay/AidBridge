@@ -13,7 +13,8 @@ module.exports = {
         "outfit-extralight":["outfit-extralight","san-serif"],
         "outfit-light":["outfit-light","sans-serif"],
         "outfit-medium":["outift-medium","sans-serif"],
-        "outfit-thin":["outfit-thin","sans-serif"]
+        "outfit-thin":["outfit-thin","sans-serif"],
+        "outfit-semibold":["outfit-semibold","sans-seriff"]
     },
   },
   },

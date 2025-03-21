@@ -1,10 +1,14 @@
 import { View, Text ,StyleSheet,Dimensions,Image} from 'react-native'
-import React from 'react'
+import React , {ReactNode, useState} from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import Layout from './layout';
+import Frontpage from './frontpage';
+import LocateNgo from './locateNgo';
+import Events from './Events';
+import Issue from './Issue';
 const { width, height } = Dimensions.get("window");
-
 const App = () => {
+  const [currpage,setcurrpage]=useState('Home');
   return (
     <View className='min-h-screen'>
       <LinearGradient
@@ -12,8 +16,10 @@ const App = () => {
           locations={[0, 0.7]}
           style={[styles.shadowOverlay, { top: 0 }]}
         />
-      <Layout>
-        <Text>APP</Text>
+      <Layout currpage={currpage} setcurrpage={setcurrpage}>
+        {
+          (currpage==='Home'?<Frontpage/>:currpage==='LocateNgo'?<LocateNgo/>:currpage==='events'?<Events/>:<Issue/>)
+        }
       </Layout>
       <LinearGradient
         colors={["transparent", "lightgreen"]}
