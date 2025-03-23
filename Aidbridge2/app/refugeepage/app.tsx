@@ -9,6 +9,15 @@ import Issue from './Issue';
 const { width, height } = Dimensions.get("window");
 const App = () => {
   const [currpage,setcurrpage]=useState('Home');
+  const [enrolledEvents, setEnrolledEvents] = useState<{ [key: string]: boolean }>({}); 
+  const enrollEvent = (eventKey: string) => {// it initializes an object of key value pairs with eventkey as key and boolean true or false as value and stores the event key which are enrolled by the user
+    if (!enrolledEvents[eventKey]) {  // Ensure enrollment is irreversible
+      setEnrolledEvents(prev => ({
+        ...prev,
+        [eventKey]: true
+      }));
+    }
+  };
   return (
     <View className='min-h-screen'>
       <LinearGradient
@@ -18,7 +27,13 @@ const App = () => {
         />
       <Layout currpage={currpage} setcurrpage={setcurrpage}>
         {
-          (currpage==='Home'?<Frontpage/>:currpage==='LocateNgo'?<LocateNgo/>:currpage==='events'?<Events/>:<Issue/>)
+          (currpage==='Home'?
+          <Frontpage enrolledEvents={enrolledEvents}/>:currpage==='LocateNgo'?
+          <LocateNgo/>:currpage==='events'?<Events
+          enrolledEvents={enrolledEvents}
+          setEnrolledEvents={setEnrolledEvents}
+          enrollEvent={enrollEvent}
+          />:<Issue/>)
         }
       </Layout>
       <LinearGradient
