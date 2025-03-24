@@ -28,7 +28,7 @@ export default function FrontPage({enrolledEvents}:frontpageprops){
         <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg">
           <Text className="font-outfit-bold text-center text-xl">Enrolled Events</Text>
           {
-          enrolledEventsList.length<=0?<Text>You haven't enrolled for any event enroll for event by clicking on events on footer.</Text>:
+          enrolledEventsList.length<=0?<Text className='text-center font-outfit-light'>You haven't enrolled for any event enroll for event by clicking on <Text className='font-outfit-bold '>Events</Text> on footer.</Text>:
           enrolledEventsList.map(event => (
             <View key={event.key} className="flex flex-col border px-2 py-2 rounded-lg bg-white shadow-md">
               <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
