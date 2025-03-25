@@ -13,7 +13,6 @@ interface LayoutProps {
 }
 export default function Layout ({children,currpage,setcurrpage}:LayoutProps) 
 {
-  // const [currpage,setcurrpage]=useState('Home');
   function header()
   {
     return(
