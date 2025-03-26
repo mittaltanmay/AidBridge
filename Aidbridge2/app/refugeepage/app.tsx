@@ -1,24 +1,32 @@
 import { View, Text ,StyleSheet,Dimensions,Image} from 'react-native'
-import React , {ReactNode, useState} from 'react'
+import React , {ReactNode, useState, useEffect} from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import Layout from './layout';
 import Frontpage from './frontpage';
 import LocateNgo from './locateNgo';
+import { Event } from './Events';
 import Events from './Events';
 import Issue from './Issue';
 const { width, height } = Dimensions.get("window");
 export default function App()
 {
-  const [currpage,setcurrpage]=useState('Home');
+  const [currpage,setcurrpage]=useState('frontpage');
   const [enrolledEvents, setEnrolledEvents] = useState<{ [key: string]: boolean }>({}); 
-  const enrollEvent = (eventKey: string) => {// it initializes an object of key value pairs with eventkey as key and boolean true or false as value and stores the event key which are enrolled by the user
-    if (!enrolledEvents[eventKey]) {  // Ensure enrollment is irreversible
-      setEnrolledEvents(prev => ({
-        ...prev,
-        [eventKey]: true
-      }));
-    }
+  const [events, setEvents] = useState<Event[]>([]);
+  const enrollEvent = (eventId: string) => {
+    setEnrolledEvents(prev => {
+      const updatedEnrolledEvents = { ...prev, [eventId]: true };
+      console.log('✅ Updated Enrolled Events:', updatedEnrolledEvents);
+      return updatedEnrolledEvents;
+    });
   };
+  
+  
+  useEffect(() => {
+    console.log('Events in App:', events);
+    console.log('Enrolled Events:', enrolledEvents);
+  }, [events, enrolledEvents]);
+  
   return (
     <View className='min-h-screen'>
       <LinearGradient
@@ -29,10 +37,16 @@ export default function App()
       <Layout currpage={currpage} setcurrpage={setcurrpage}>
         {
           (currpage==='Home'?
-          <Frontpage enrolledEvents={enrolledEvents}/>:currpage==='LocateNgo'?
+            <Frontpage 
+            key={Object.keys(enrolledEvents).length} // ✅ Forces re-render when enrolledEvents changes
+            events={events} 
+            enrolledEvents={enrolledEvents} 
+          />
+          :currpage==='LocateNgo'?
           <LocateNgo/>:currpage==='events'?<Events
+          events={events}
+          setEvents={setEvents}
           enrolledEvents={enrolledEvents}
-          setEnrolledEvents={setEnrolledEvents}
           enrollEvent={enrollEvent}
           />:<Issue/>)
         }

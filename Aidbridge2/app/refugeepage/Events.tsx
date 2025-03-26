@@ -1,72 +1,112 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
-import React, { useState } from 'react';
-import eventsData from '@/utils/eventsData';
+import { View, Text, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import supabase from '../../config/supabaseClient.js';
 
 interface EventsProps {
+  events: Event[];
+  setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
   enrolledEvents: { [key: string]: boolean };
-  setEnrolledEvents: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
-  enrollEvent: (eventKey: string) => void;
+  // setEnrolledEvents: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
+  enrollEvent: (eventId: string) => void;
 }
-export default function Events({ enrolledEvents, enrollEvent }: EventsProps) {  
+
+export interface Event {
+  id: string;
+  name: string;
+  description: string;
+  date: string;
+  time: string;
+  ngo_name: string;
+  key: string;
+}
+
+export default function Events({events, enrolledEvents, enrollEvent, setEvents }: EventsProps) {
+  const [loading, setLoading] = useState(true);
+
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
 
-  const parseDate = (dateStr: string): Date => {
-    const [day, month, year] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day);
-  };
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('Events')
+        .select('id, event_name, Description, date, time, NGO_id, NGO(NGO_name)') // Joining NGOs table to get NGO name
+        .order('date', { ascending: true }); // Sorting by date
 
-  // Convert object to array and sort by date
-  const upcomingEvents = Object.entries(eventsData)
-    .map(([key, eventData]) => ({ key, ...eventData })) // Convert to array with keys
-    .filter(event => parseDate(event.date) >= currentDate)
-    .sort((a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime());
-    
+      if (error) {
+        console.error('Error fetching events:', error);
+      } else {
+        // Format data properly
+        const formattedEvents = data.map(event => ({
+          key: event.id,
+          id: event.id,
+          name: event.event_name,
+          description: event.Description,
+          date: event.date,
+          time: event.time,
+          ngo_name: event.NGO.NGO_name, // Extracting NGO name from the joined table
+        }));
+
+        console.log('Fetched Events:', formattedEvents);
+
+        setEvents(formattedEvents);
+      }
+      setLoading(false);
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <View className="flex flex-col gap-10 items-center py-2 px-2">
       <ScrollView>
         <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg">
           <Text className="font-outfit-bold text-center text-xl">Events Near You</Text>
-          {upcomingEvents.map(event => {
-            const isEnrolled = enrolledEvents[event.key];
 
-            return (
-              <View key={event.key} className="flex flex-col border px-2 py-2 rounded-lg bg-white shadow-md">
-                <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
-                <Text className="font-outfit-semibold text-green-600 text-xl">
-                  Organized by: <Text className="text-black font-outfit-medium">{event.ngo}</Text>
-                </Text>
-                <Text className="text-xl text-green-600 font-outfit-semibold">
-                  Description:
-                  <Text className="text-black text-xl font-outfit-medium"> {event.description}</Text>
-                </Text>
-                <Text className="text-green-600 text-lg font-outfit-semibold">
-                  📅 {event.date} | ⏰ {event.timing}
-                </Text>
+          {loading ? (
+            <ActivityIndicator size="large" color="#4CAF50" />
+          ) : (
+            events.map(event => {
+              const isEnrolled = enrolledEvents[event.id];
 
-                {/* Enroll button */}
-                <Pressable
-                  style={{
-                    backgroundColor: isEnrolled ? '#A0A0A0' : '#86EFAC', // Gray if enrolled, Green otherwise
-                    paddingVertical: 12,
-                    paddingHorizontal: 16,
-                    borderRadius: 8,
-                    borderWidth: 1,
-                    alignItems: 'center',
-                    marginTop: 10,
-                  }}
-                  onPress={() => enrollEvent(event.key)}
-                  disabled={isEnrolled} // Disable button if enrolled
-                >
-                  <Text className="font-outfit-bold text-2xl text-center">
-                    {isEnrolled ? 'Enrolled' : 'Enroll Now'}
+              return (
+                <View key={event.key} className="flex flex-col border px-2 py-2 rounded-lg bg-white shadow-md">
+                  <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
+                  <Text className="font-outfit-semibold text-green-600 text-xl">
+                    Organized by: <Text className="text-black font-outfit-medium">{event.ngo_name}</Text>
                   </Text>
-                </Pressable>
-              </View>
-            );
-          })}
+                  <Text className="text-xl text-green-600 font-outfit-semibold">
+                    Description: <Text className="text-black text-xl font-outfit-medium">{event.description}</Text>
+                  </Text>
+                  <Text className="text-green-600 text-lg font-outfit-semibold">
+                    📅 {event.date} | ⏰ {event.time}
+                  </Text>
+
+                  {/* Enroll button */}
+                  <Pressable
+                    style={{
+                      backgroundColor: isEnrolled ? '#A0A0A0' : '#86EFAC', // Gray if enrolled, Green otherwise
+                      paddingVertical: 12,
+                      paddingHorizontal: 16,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      alignItems: 'center',
+                      marginTop: 10,
+                    }}
+                    onPress={() => enrollEvent(event.id)}
+                    disabled={isEnrolled} // Disable button if enrolled
+                  >
+                    <Text className="font-outfit-bold text-2xl text-center">
+                      {isEnrolled ? 'Enrolled' : 'Enroll Now'}
+                    </Text>
+                  </Pressable>
+                </View>
+              );
+            })
+          )}
         </View>
       </ScrollView>
     </View>
   );
-};
+}
