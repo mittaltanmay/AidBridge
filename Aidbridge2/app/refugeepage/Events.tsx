@@ -59,9 +59,9 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
   }, []);
 
   return (
-    <View className="flex flex-col gap-10 items-center py-2 px-2">
+    <View className="flex flex-col gap-10 items-center py-2 px-1">
       <ScrollView>
-        <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg">
+        <View className="flex flex-col border py-2 px-2 w-[380] gap-5 rounded-lg">
           <Text className="font-outfit-bold text-center text-xl">Events Near You</Text>
 
           {loading ? (
@@ -71,7 +71,7 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
               const isEnrolled = enrolledEvents[event.id];
 
               return (
-                <View key={event.key} className="flex flex-col border px-2 py-2 rounded-lg bg-white shadow-md">
+                <View key={event.key} className="flex flex-col border  px-2 py-2 rounded-lg bg-white shadow-md">
                   <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
                   <Text className="font-outfit-semibold text-green-600 text-xl">
                     Organized by: <Text className="text-black font-outfit-medium">{event.ngo_name}</Text>

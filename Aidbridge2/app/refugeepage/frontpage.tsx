@@ -1,17 +1,6 @@
 import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
-// import { eventsData } from '../../utils/eventsData';
 import { Event }  from './Events';
-
-// interface Event {
-//   id: string;
-//   name: string;
-//   description: string;
-//   date: string;
-//   time: string;
-//   ngo_name: string;
-//   key: string;
-// }
 
 interface frontpageprops{
   events: Event[];
@@ -44,12 +33,12 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
     <View className="flex flex-col gap-10 items-center py-2 px-2">
       <Text className="font-outfit-bold text-5xl text-green-500">Your Dashboard</Text>
       <ScrollView>
-        <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg">
+        <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg w-[370]">
           <Text className="font-outfit-bold text-center text-xl">Enrolled Events</Text>
           {
           enrolledEventsList.length<=0?<Text className='text-center font-outfit-light'>You haven't enrolled for any event enroll for event by clicking on <Text className='font-outfit-bold '>Events</Text> on footer.</Text>:
           enrolledEventsList.map(event => (
-            <View key={event.id} className="flex flex-col border px-2 py-2 rounded-lg bg-white shadow-md">
+            <View key={event.id} className="flex flex-col border px-1 py-2 rounded-lg bg-white shadow-md">
               <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
               <Text className="font-outfit-semibold text-green-600 text-xl">
                 Organized by: <Text className="text-black font-outfit-medium">{event.ngo_name}</Text>

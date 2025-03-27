@@ -45,9 +45,9 @@ export default function LocateNgo(){
     return newMarkers;
   };
   return (
-    <View className='items-center  flex px-2 mt-16 h-[50%] w-[50%]'>
+    <View className='items-center flex px-2 h-[50%] w-full'>
       <MapView
-        style={{height:400,width:300}}
+        style={{height:400,width:400}}
         provider={PROVIDER_GOOGLE}
         initialRegion={location || {
           latitude: 37.7749, // Default location (San Francisco)

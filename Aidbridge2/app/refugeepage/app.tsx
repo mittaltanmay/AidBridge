@@ -10,7 +10,7 @@ import Issue from './Issue';
 const { width, height } = Dimensions.get("window");
 export default function App()
 {
-  const [currpage,setcurrpage]=useState('frontpage');
+  const [currpage,setcurrpage]=useState('Home');
   const [enrolledEvents, setEnrolledEvents] = useState<{ [key: string]: boolean }>({}); 
   const [events, setEvents] = useState<Event[]>([]);
   const enrollEvent = (eventId: string) => {
