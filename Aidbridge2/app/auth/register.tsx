@@ -5,21 +5,25 @@ import { LinearGradient } from "expo-linear-gradient";
 import {state,locations} from "./../../utils/loaction"
 import { Picker } from '@react-native-picker/picker'
 import {passwordgenerator} from "./../../utils/passwordGenerator" 
+import { ScrollView } from 'react-native';
+// import DatePicker from 'react-native-date-picker'
+import { DatePickerInput } from 'react-native-paper-dates';
 const { width, height } = Dimensions.get("window");
 
 const Register = () => {
   const [name,setName]=useState('');
   const [selectedState, setSelectedState] = useState('');
   const [sublocation,setsublocation]=useState('');
-  const [genenratepassword,setgeneratepassword]=useState('');
+  const [password,setpassword]=useState('');
+  const [dob,setdob]=useState(undefined);
   function handleregister()
   {
     if(!state || !selectedState || !sublocation) return;
-    const password=passwordgenerator(name,selectedState,sublocation);
-    console.log(name,selectedState,sublocation,password);
+    console.log(name,selectedState,sublocation,dob,password);
     setName('');
     setSelectedState('');
     setsublocation('');
+    setdob(undefined)
     return;
   }
   return (
@@ -30,42 +34,57 @@ const Register = () => {
         style={[styles.shadowOverlay, { top: 0 }]}
       />
       <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':'height'} style={{flex:1}}>
-      <View className='p-10 flex flex-col items-center justify-center gap-10'>
-        <Image className="w-[150px] h-[150px] mt-10 border" source={require('./../../assets/images/logo7.webp')} />
-        <Text className='text-5xl font-outfit-bold'>Register</Text>
-        <View className='flex flex-col gap-10'>
-          <TextInput className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium'value={name}  onChangeText={setName} placeholder='Name'></TextInput>
-          <View className="bg-white border w-[300px] h-fit rounded-md">
-              <Picker
-                selectedValue={selectedState}
-                onValueChange={(itemValue) => setSelectedState(itemValue)}>
-                <Picker.Item label="Select State" value="" enabled={false} />
-                {state.map((st, index) => (
-                  <Picker.Item key={index} label={st} value={st} />
+      <ScrollView>
+        <View className='p-10 flex flex-col items-center justify-center gap-10'>
+          <Image className="w-[150px] h-[150px] mt-10 border" source={require('./../../assets/images/logo7.webp')} />
+          <Text className='text-5xl font-outfit-bold'>Register</Text>
+          <View className='flex flex-col gap-10'>
+            <TextInput className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium'value={name}  onChangeText={setName} placeholder='Name'></TextInput>
+            <View className="bg-white border w-[300px] h-fit rounded-md">
+                <Picker
+                  selectedValue={selectedState}
+                  onValueChange={(itemValue) => setSelectedState(itemValue)}>
+                  <Picker.Item label="Select State" value="" enabled={false} />
+                  {state.map((st, index) => (
+                    <Picker.Item key={index} label={st} value={st} />
+                  ))}
+                </Picker>
+            </View>
+            {selectedState && locations[selectedState as keyof typeof locations] && (
+            <View className='bg-white border w-[300px] rounded-md'>
+              <Picker selectedValue={sublocation} onValueChange={(itemValue) => setsublocation(itemValue)}>
+                <Picker.Item label='Select Sublocation' value='' enabled={false} />
+                {locations[selectedState as keyof typeof locations].map((sub, index) => (
+                  <Picker.Item key={index} label={sub} value={sub} />
                 ))}
               </Picker>
+            </View>
+          )}
+          <View className='h-10 bg-white w-[300px]'>
+            <DatePickerInput //DOB is stored in yyyy-mm-dd format
+            locale="en"
+            label="Date of Birth"
+            value={dob}
+            onChange={(d) => setdob(d)}
+            inputMode="start"
+            style={{backgroundColor:'white'}}
+            mode='outlined'
+            />
           </View>
-          {selectedState && locations[selectedState as keyof typeof locations] && (
-          <View className='bg-white border w-[300px] rounded-md'>
-            <Picker selectedValue={sublocation} onValueChange={(itemValue) => setsublocation(itemValue)}>
-              <Picker.Item label='Select Sublocation' value='' enabled={false} />
-              {locations[selectedState as keyof typeof locations].map((sub, index) => (
-                <Picker.Item key={index} label={sub} value={sub} />
-              ))}
-            </Picker>
+          <TextInput secureTextEntry={true}  placeholder='Enter Pasword' className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium' value={password} onChangeText={setpassword}>
+          </TextInput>
           </View>
-        )}
+          <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
+            <Text className='text-white font-outfit-bold text-xl'>Verify & Register</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
-          <Text className='text-white font-outfit-bold text-xl'>Verify & Register</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
       </KeyboardAvoidingView>
       <LinearGradient
           colors={["transparent", "lightgreen"]}
           locations={[0.2, 0.7]}
           style={[styles.shadowOverlay, { bottom: 0,position:'fixed'}]}/>
-    </>
+      </>
   )
 }
 
