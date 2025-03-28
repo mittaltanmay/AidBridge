@@ -4,11 +4,45 @@ import { Link, useRouter } from 'expo-router'
 import { StyleSheet,Dimensions,Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 const { width, height } = Dimensions.get("window");
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import supabase from '../../config/supabaseClient';
+import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
   const router=useRouter();
-  const [username,setusername]=useState('');
-  const [password,setpassword]=useState('');
+  const navigation = useNavigation();
+  const [unhcrid, setUniqueNumber] = useState('');
+    const [password, setpassword] = useState('');
+
+    const handleLogin = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('Refugee')
+                .select('*')
+                .eq('unhcrid', parseInt(unhcrid))
+                .eq('password', password)
+                .eq('is_active', true);
+
+            if (error) {
+                console.error('Login error:', error.message);
+                Alert.alert('Login failed', error.message);
+                return;
+            }
+
+            if (data && data.length > 0) {
+                // Store the user session locally
+                await AsyncStorage.setItem('user', JSON.stringify(data[0]));
+                Alert.alert('Login successful', 'Welcome back!');
+                router.push('../refugeepage/app');
+            } else {
+                Alert.alert('Login failed', 'Invalid credentials or account not activated.');
+            }
+        } catch (err) {
+            console.error('Unexpected error during login:', err);
+            Alert.alert('Error', 'Something went wrong.');
+        }
+    };
   return (
     <>
       <LinearGradient
@@ -22,12 +56,12 @@ const Login = () => {
         <Text className='text-5xl font-outfit-bold mt-14'>Login</Text>
         <View className='flex flex-col gap-2 mt-5 p-3 mb-5'>
           <Text className='text-lg font-outfit-medium'>Username</Text>
-          <TextInput className="bg-white w-[300px] rounded-md border" value={username} onChangeText={text=>setusername(text)}></TextInput>
+          <TextInput className="bg-white w-[300px] rounded-md border" value={unhcrid} onChangeText={text=>setUniqueNumber(text)}></TextInput>
           <Text className='text-lg font-outfit-medium'>Password</Text>
           <TextInput secureTextEntry={true} className="bg-white w-[300px] rounded-md border" value={password} onChangeText={text=>setpassword(text)}></TextInput>
         </View>
         <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-3'>
-          <Text className='text-white text-lg font-outfit-bold' onPress={()=>router.push('../refugeepage/app')}>Login</Text>
+          <Text className='text-white text-lg font-outfit-bold' onPress={handleLogin}>Login</Text>
         </TouchableOpacity>
         <View className='flex flex-row items-center gap-2'>
           <Text className='text-lg'>Don't Have account?
