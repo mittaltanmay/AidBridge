@@ -3,8 +3,10 @@ import React from 'react'
 
 const Issue = () => {
   return (
-    <View>
-      <Text>Issue</Text>
+    <View className='flex flex-col'>
+      <Text>Select the Category</Text>
+      <Text>Write Description</Text>
+      <Text>Press Submit</Text>
     </View>
   )
 }

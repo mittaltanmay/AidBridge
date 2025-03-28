@@ -11,6 +11,7 @@ export default function LocateNgo(){
   const [ngoMarkers, setNgoMarkers] = useState<{ latitude: number; longitude: number; name: string }[]>([]);
   useEffect(() => {
     const fetchLocation = async () => {
+      if(location) return;
       // Request location permission
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -45,15 +46,15 @@ export default function LocateNgo(){
     return newMarkers;
   };
   return (
-    <View className='items-center flex px-2 h-[50%] w-full'>
+    <View className='items-center -mt-9 flex px-2 h-[50%] w-full'>
       <MapView
-        style={{height:400,width:400}}
+        style={{height:450,width:400}}
         provider={PROVIDER_GOOGLE}
-        initialRegion={location || {
-          latitude: 37.7749, // Default location (San Francisco)
-          longitude: -122.4194,
-          latitudeDelta: 0.1,
-          longitudeDelta: 0.1,
+        region={location || {
+          latitude: 28.6139, // ✅ Default location: New Delhi, India
+            longitude: 77.2090,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
         }}
         showsUserLocation
       >

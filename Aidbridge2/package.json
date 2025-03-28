@@ -50,6 +50,7 @@
     "react-native-element-dropdown": "^2.12.4",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "~2.20.2",
+    "react-native-image-picker": "^8.2.0",
     "react-native-inset-shadow": "^1.0.3",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "1.18.0",
@@ -62,7 +63,8 @@
     "react-native-svg": "^15.11.2",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "expo-image-picker": "~16.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
