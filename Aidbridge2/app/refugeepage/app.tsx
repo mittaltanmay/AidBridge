@@ -1,4 +1,5 @@
 import { View, Text ,StyleSheet,Dimensions,Image} from 'react-native'
+import { registerTranslation, en } from 'react-native-paper-dates';
 import React , {ReactNode, useState, useEffect} from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import Layout from './layout';
@@ -8,6 +9,10 @@ import { Event } from './Events';
 import Events from './Events';
 import Issue from './Issue';
 const { width, height } = Dimensions.get("window");
+
+// Register the English locale
+registerTranslation('en', en);
+
 export default function App()
 {
   const [currpage,setcurrpage]=useState('Home');

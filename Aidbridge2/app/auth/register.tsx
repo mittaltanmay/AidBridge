@@ -10,6 +10,8 @@ import * as ImagePicker from 'expo-image-picker';
 import {faCamera} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 const { width, height } = Dimensions.get("window");
+import supabase from "../../config/supabaseClient";
+import { Alert } from 'react-native';
 
 const Register = () => {
   const [name,setName]=useState('');
@@ -20,6 +22,7 @@ const Register = () => {
   const [unhcrid,setunhcrid]=useState('');
   const [country,setcountry]=useState('');
   const [idImage, setIdImage] = useState<string | null>(null);
+
     async function pickImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -55,17 +58,83 @@ const Register = () => {
       setIdImage(result.assets[0].uri);
       console.log("Captured Image URI:", result.assets[0].uri); // ✅ Log to console
     }
+
+    const data = {
+      name,
+      selectedState,
+      sublocation,
+      password,
+      dob,
+      unhcrid: parseInt(unhcrid),
+      country,
+      idImage,
+  };
+
+  const response = await registerUser(data);
+  Alert.alert(response.message);
+
   }
-  function handleregister()
-  {
+
+  interface UserData {
+    name: string;
+    selectedState: string;
+    sublocation: string;
+    password: string;
+    dob: undefined;
+    unhcrid: number;
+    country: string;
+    idImage: string | null;
+}
+
+  function handleregister() {
     if(!state || !selectedState || !sublocation) return;
     console.log(name,selectedState,sublocation,dob,password,country,unhcrid);
+    const data = {
+      name,
+      selectedState,
+      sublocation,
+      password,
+      dob,
+      unhcrid: parseInt(unhcrid),
+      country,
+      idImage,
+  };
+    registerUser(data);
+
     setName('');
     setSelectedState('');
     setsublocation('');
-    setdob(undefined)
+    setdob(undefined);
     return;
   }
+
+  // Registration function
+  async function registerUser(data: UserData): Promise<{ success: boolean; message: string }> {
+  const { name, selectedState, sublocation, password, dob, unhcrid, country, idImage } = data;
+
+  try {
+      const { error } = await supabase
+          .from('Refugee')  // Your table name
+          .insert([{
+              name,
+              selectedState, sublocation, password, dob,
+              unhcrid,       // Store hashed password ideally
+              country, 
+              idImage,
+              is_active: false // Default to false
+          }]);
+
+      if (error) {
+          console.error('Error during registration:', error.message);
+          return { success: false, message: error.message };
+      }
+      return { success: true, message: 'Registration successful. Await admin approval.' };
+  } catch (err) {
+      console.error('Unexpected error:', err);
+      return { success: false, message: 'Unexpected error occurred.' };
+  }
+}
+
   return (
     <>
       <LinearGradient
