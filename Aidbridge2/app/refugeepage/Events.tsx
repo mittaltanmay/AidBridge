@@ -37,7 +37,6 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
       if (error) {
         console.error('Error fetching events:', error);
       } else {
-        // Format data properly
         const formattedEvents = data.map(event => ({
           key: event.id,
           id: event.id,
@@ -45,7 +44,7 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
           description: event.Description,
           date: event.date,
           time: event.time,
-          ngo_name: event.NGO.NGO_name, // Extracting NGO name from the joined table
+          ngo_name: event.NGO.NGO_name, 
         }));
 
         console.log('Fetched Events:', formattedEvents);

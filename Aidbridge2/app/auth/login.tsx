@@ -55,7 +55,7 @@ const Login = () => {
         <Image className="w-[150px] h-[150px] mt-12 border" source={require('./../../assets/images/logo7.webp')} />
         <Text className='text-5xl font-outfit-bold mt-14'>Login</Text>
         <View className='flex flex-col gap-2 mt-5 p-3 mb-5'>
-          <Text className='text-lg font-outfit-medium'>Username</Text>
+          <Text className='text-lg font-outfit-medium'>UNHCR ID</Text>
           <TextInput className="bg-white w-[300px] rounded-md border" value={unhcrid} onChangeText={text=>setUniqueNumber(text)}></TextInput>
           <Text className='text-lg font-outfit-medium'>Password</Text>
           <TextInput secureTextEntry={true} className="bg-white w-[300px] rounded-md border" value={password} onChangeText={text=>setpassword(text)}></TextInput>

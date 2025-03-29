@@ -8,7 +8,8 @@ import * as Location from 'expo-location';
 const NUM_NGO_MARKERS=10;
 export default function LocateNgo(){
   const [location, setLocation] = useState<Region | null>(null);
-  const [ngoMarkers, setNgoMarkers] = useState<{ latitude: number; longitude: number; name: string }[]>([]);
+  const [ngoMarkers, setNgoMarkers] = useState<{ latitude: number; longitude: number; name: string,contact:string }[]>([]);
+  const [selectedNgo, setSelectedNgo] = useState<{ name: string; contact: string } | null>(null);
   useEffect(() => {
     const fetchLocation = async () => {
       if(location) return;
@@ -18,7 +19,7 @@ export default function LocateNgo(){
         console.log('Permission to access location was denied');
         return;
       }
-      let userLocation = await Location.getCurrentPositionAsync({});
+      let userLocation = await Location.getCurrentPositionAsync({}); // it is actually fetching location information
       const usercoord={
         latitude: userLocation.coords.latitude,
         longitude: userLocation.coords.longitude,
@@ -41,17 +42,18 @@ export default function LocateNgo(){
         latitude: lat + latitudeOffset,
         longitude: lon + longitudeOffset,
         name: `NGO ${i + 1}`, // Assign a name for testing
+        contact: `+91 98765 432${i}`, // Fake contact number
       });
     }
     return newMarkers;
   };
   return (
-    <View className='items-center -mt-9 flex px-2 h-[50%] w-full'>
+    <View className='items-start -mt-9 flex px-2 h-[50%] w-full gap-5'>
       <MapView
         style={{height:450,width:400}}
         provider={PROVIDER_GOOGLE}
         region={location || {
-          latitude: 28.6139, // ✅ Default location: New Delhi, India
+          latitude: 28.6139, 
             longitude: 77.2090,
             latitudeDelta: 0.1,
             longitudeDelta: 0.1,
@@ -59,10 +61,26 @@ export default function LocateNgo(){
         showsUserLocation
       >
         {location && <Marker coordinate={location} title="Your Location" pinColor="blue"/>}
-        {ngoMarkers.map((marker, index) => (
-          <Marker key={index} coordinate={marker} title={marker.name} pinColor="red" />
+        {ngoMarkers.map((marker, index) => ( // This information for NGO Markers should be fetched from backend
+          <Marker 
+          key={index} coordinate={marker} 
+          title={marker.name} 
+          pinColor="red"
+          onPress={()=>setSelectedNgo({ name: marker.name,contact:marker.contact })} 
+          />
         ))}
       </MapView>   
+      <Text className='ml-10 text-red-600'>*click on red marker for more information</Text>
+      <View className='ml-5 flex flex-col items-start w-full'>
+        <View className='flex flex-row gap-2'>
+          <Text className='text-green-600 font-outfit-semibold text-xl'>NGO Name:-</Text>
+          <Text className='font-outfit-semibold text-xl'>{selectedNgo?.name}</Text>
+        </View>
+        <View className='flex flex-row gap-2'>
+          <Text className='text-green-600 font-outfit-semibold text-xl'>Contact Details</Text>
+          <Text className='font-outfit-semibold text-xl'>{selectedNgo?.contact}</Text>
+        </View>
+      </View>
     </View>
   )
 }
