@@ -105,6 +105,9 @@ const Register = () => {
     setSelectedState('');
     setsublocation('');
     setdob(undefined);
+    setIdImage(null);
+    setunhcrid('');
+    setcountry('');
     return;
   }
 
@@ -198,7 +201,7 @@ const Register = () => {
           )}
           </View>
           <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
-            <Text className='text-white font-outfit-bold text-xl'>Verify & Register</Text>
+            <Text className='text-white font-outfit-bold text-xl'>Register</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
