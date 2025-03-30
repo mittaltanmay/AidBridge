@@ -1,11 +1,14 @@
 import { View, Text ,StyleSheet,Dimensions,Image, Pressable} from 'react-native'
-import React , {ReactNode, useState} from 'react'
+import React , {ReactNode, useState, useEffect} from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faHouse,faLocationDot,faUsersRectangle,faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
 import { } from '@fortawesome/free-regular-svg-icons';
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 const { width, height } = Dimensions.get("window");
+import supabase from "../../config/supabaseClient";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 interface LayoutProps {
   children: ReactNode;
   currpage: string;
@@ -13,6 +16,24 @@ interface LayoutProps {
 }
 export default function Layout ({children,currpage,setcurrpage}:LayoutProps) 
 {
+  const [userName, setUserName] = useState<string | null>(null);
+
+  // Fetch user name from AsyncStorage
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          setUserName(user.name || 'user');
+        }
+      } catch (error) {
+        console.error('Error fetching user name:', error);
+      }
+    };
+
+    fetchUserName();
+  }, []);
   function header()
   {
     return(
@@ -20,7 +41,7 @@ export default function Layout ({children,currpage,setcurrpage}:LayoutProps)
         <Image className='w-[50px] h-[50px] rounded-full' source={require('../../assets/images/logo7.webp')}/>
         <View className='flex flex-col'>
           <Text className='font-outfit-semibold text-xl'>Welcome</Text>
-          <Text className='font-outfit-bold text-3xl'>Tanmay</Text>
+          <Text className='font-outfit-bold text-3xl'>{userName}</Text>
         </View>
       </View>
     )
