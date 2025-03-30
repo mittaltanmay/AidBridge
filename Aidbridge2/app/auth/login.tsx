@@ -13,7 +13,7 @@ const Login = () => {
   const router=useRouter();
   const navigation = useNavigation();
   const [unhcrid, setUniqueNumber] = useState('');
-    const [password, setpassword] = useState('');
+  const [password, setpassword] = useState('');
 
     const handleLogin = async () => {
         try {
@@ -55,7 +55,7 @@ const Login = () => {
         <Image className="w-[150px] h-[150px] mt-12 border" source={require('./../../assets/images/logo7.webp')} />
         <Text className='text-5xl font-outfit-bold mt-14'>Login</Text>
         <View className='flex flex-col gap-2 mt-5 p-3 mb-5'>
-          <Text className='text-lg font-outfit-medium'>UNHCR ID</Text>
+          <Text className='text-lg font-outfit-medium'>UserName</Text>
           <TextInput className="bg-white w-[300px] rounded-md border" value={unhcrid} onChangeText={text=>setUniqueNumber(text)}></TextInput>
           <Text className='text-lg font-outfit-medium'>Password</Text>
           <TextInput secureTextEntry={true} className="bg-white w-[300px] rounded-md border" value={password} onChangeText={text=>setpassword(text)}></TextInput>
@@ -63,13 +63,6 @@ const Login = () => {
         <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-3'>
           <Text className='text-white text-lg font-outfit-bold' onPress={handleLogin}>Login</Text>
         </TouchableOpacity>
-        <View className='flex flex-row items-center gap-2'>
-          <Text className='text-lg'>Don't Have account?
-            <TouchableOpacity onPress={()=>router.push('/auth/register')}>
-              <Text className='text-blue-400 -mb-2 text-lg'> Register</Text>
-            </TouchableOpacity>
-          </Text>
-        </View>
       </View>
       </KeyboardAvoidingView>
       <LinearGradient

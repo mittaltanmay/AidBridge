@@ -24,7 +24,7 @@ export default function Index() {
         </View>
         <Text className="text-3xl font-outfit-bold">OR</Text>
         <View className='flex flex-row gap-5 items-center -ml-[49px]'>
-          <TouchableOpacity className="Button1" onPress={()=>router.push('/auth/register')}>
+          <TouchableOpacity className="Button1" onPress={()=>router.push('/authNgo/register')}>
             <Text className="font-outfit-bold text-2xl text-white">NGO</Text>
           </TouchableOpacity>
           <Text className="text-2xl font-outfit-medium">Here to Help</Text>

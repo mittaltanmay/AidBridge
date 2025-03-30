@@ -151,8 +151,11 @@ const Register = () => {
           <Image className="w-[150px] h-[150px] mt-10 border" source={require('./../../assets/images/logo7.webp')} />
           <Text className='text-5xl font-outfit-bold'>Register</Text>
           <View className='flex flex-col gap-10'>
-            <TextInput className='bg-white px-5 w-[300px] h-[50px] rounded-md font-outfit-medium border' placeholder='Enter UNHCR ID' value={unhcrid} onChangeText={setunhcrid}></TextInput>
-            <TextInput className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium'value={name}  onChangeText={setName} placeholder='Name'></TextInput>
+            <View className='flex flex-col gap-1'>
+              <TextInput className='bg-white px-5 w-[300px] h-[50px] rounded-md font-outfit-medium border' placeholder='Enter UNHCR ID' value={unhcrid} onChangeText={setunhcrid}></TextInput>
+              <Text className='text-green-500'> *this wil be the username for login</Text>
+            </View>
+            <TextInput className='bg-white -mt-5 border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium'value={name}  onChangeText={setName} placeholder='Name'></TextInput>
             <TextInput className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium' value={country} onChangeText={setcountry} placeholder='Enter your country'></TextInput>
             <View className="bg-white border w-[300px] h-fit rounded-md">
                 <Picker
