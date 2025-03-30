@@ -60,8 +60,8 @@ const Login = () => {
           <Text className='text-lg font-outfit-medium'>Password</Text>
           <TextInput secureTextEntry={true} className="bg-white w-[300px] rounded-md border" value={password} onChangeText={text=>setpassword(text)}></TextInput>
         </View>
-        <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-3'>
-          <Text className='text-white text-lg font-outfit-bold' onPress={handleLogin}>Login</Text>
+        <TouchableOpacity className='bg-black py-3 px-6 rounded-md mb-3' onPress={handleLogin}>
+          <Text className='text-white text-lg font-outfit-bold'>Login</Text>
         </TouchableOpacity>
       </View>
       </KeyboardAvoidingView>

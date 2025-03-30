@@ -35,6 +35,7 @@ useEffect(() => {
 }, []);
 function handleregister() // all the info need to be stored in backend
 {
+  if(!ngoid || !ngoname || !ngocontact || !ngopassword) return;
   console.log(ngoid,ngoname,ngocontact,ngopassword);
   setngoid('');
   setngocontact('');
@@ -47,6 +48,7 @@ function handleregister() // all the info need to be stored in backend
   } else {
     console.log("No location selected");
   }
+  router.push('/authNgo/login');
   return;
 }
   return (

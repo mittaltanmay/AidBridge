@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 const { width, height } = Dimensions.get("window");
 import supabase from "../../config/supabaseClient";
 import { Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const Register = () => {
   const [name,setName]=useState('');
@@ -22,7 +23,7 @@ const Register = () => {
   const [unhcrid,setunhcrid]=useState('');
   const [country,setcountry]=useState('');
   const [idImage, setIdImage] = useState<string | null>(null);
-
+  const router=useRouter();
     async function pickImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -87,7 +88,7 @@ const Register = () => {
 }
 
   function handleregister() {
-    if(!state || !selectedState || !sublocation) return;
+    if(!state || !selectedState || !sublocation || !dob || !password || !unhcrid || !name || !country) return;
     console.log(name,selectedState,sublocation,dob,password,country,unhcrid);
     const data = {
       name,
@@ -108,6 +109,7 @@ const Register = () => {
     setIdImage(null);
     setunhcrid('');
     setcountry('');
+    router.push('/auth/login');
     return;
   }
 
