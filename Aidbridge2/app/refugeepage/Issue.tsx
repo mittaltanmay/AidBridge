@@ -1,16 +1,37 @@
 import { View, Text, TextInput,StyleSheet, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { Picker } from '@react-native-picker/picker' 
-
+import supabase from '../../config/supabaseClient'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Issue = () => {
   const [category,setcategory]=useState('');
   const [description,setdescription]=useState('');
   const [height, setHeight] = useState(0); // Initial height
-  function handleSubmit()
-  {
-    console.log(category,description);
-  }
+  const handleSubmit = async () => {
+    try {
+    // Fetch the stored user data from AsyncStorage
+    const userDataString = await AsyncStorage.getItem('user');
+    if (!userDataString) {
+      console.log('Error: User not logged in');
+      return;
+    }
+    console.log(userDataString);
+    // Parse the user data to get the user_id
+    const userData = JSON.parse(userDataString);
+    const ref_id = userData.unhcrid;  
+    const { data, error } = await supabase
+      .from('Issues')  // Replace 'users' with your table name
+      .insert([{ category, description, ref_id }]);
+
+    if (error) {
+      console.log(`Error: ${error.message}`);
+    } else {
+      console.log('Data inserted successfully!');
+    } }catch(error) {
+      console.log(`Unexpected error: ${error}`);
+    }
+  };
 
   return (
     <View className='flex flex-col gap-10 items-center'>
