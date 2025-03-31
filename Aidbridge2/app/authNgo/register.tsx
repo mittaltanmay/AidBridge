@@ -10,9 +10,9 @@ import supabase from "../../config/supabaseClient";
 
 export default function Register(){
 const router=useRouter();
-const [NGO_id,setngoid]=useState('');
+const [NGO_id,setngo_id]=useState('');
 const [ngocontact,setngocontact]=useState('');
-const [NGO_name,setngoname]=useState('');
+const [NGO_name,setngo_name]=useState('');
 const [ngopassword,setngopassword]=useState('');
 const [ngolocation,setNgolocation]=useState<Region|null>(null);
 const [modalVisible, setModalVisible] = useState(false);
@@ -47,16 +47,16 @@ function handleregister() // all the info need to be stored in backend
   if(!NGO_id || !NGO_name || !ngocontact || !ngopassword) return;
   console.log(NGO_id,NGO_name,ngocontact,ngopassword);
   const data = {
-    NGO_id : Number(NGO_id),
+    NGO_id : parseInt(NGO_id),
     NGO_name,
-    ngocontact : Number(ngocontact),
+    ngocontact : parseInt(ngocontact),
     ngopassword,
     ngolocation
 };
 registerUser(data);
-  setngoid('');
+  setngo_id('');
   setngocontact('');
-  setngoname('');
+  setngo_name('');
   setngopassword('');
   if (ngolocation) {
     console.log("Selected Location:");
@@ -79,7 +79,7 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             NGO_name,
             ngocontact,
             ngopassword,
-            ngolocation,
+            ngolocation: JSON.stringify(ngolocation),
               is_active: false // Default to false
           }]);
 
@@ -107,10 +107,10 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             <Image className="w-[150px] h-[150px] mt-10 border" source={require('./../../assets/images/logo7.webp')} />
             <Text className='font-outfit-bold text-3xl'>Register Your Ngo</Text>
             <View className='flex flex-col gap-1'>
-              <TextInput placeholder='Enter your Darpan Id' value={NGO_id} onChangeText={setngoid} className='bg-white w-[300px] h-[50px] border rounded-md px-3'></TextInput>
+              <TextInput placeholder='Enter your Darpan Id' value={NGO_id} onChangeText={setngo_id} className='bg-white w-[300px] h-[50px] border rounded-md px-3'></TextInput>
               <Text className='text-green-500'> *this wil be the username for login</Text>
             </View>
-            <TextInput placeholder='Enter NGO Name' value={NGO_name} onChangeText={setngoname} className='bg-white w-[300px] h-[50px] border rounded-md px-3 -mt-5'></TextInput>
+            <TextInput placeholder='Enter NGO Name' value={NGO_name} onChangeText={setngo_name} className='bg-white w-[300px] h-[50px] border rounded-md px-3 -mt-5'></TextInput>
             <TextInput placeholder='Contact' value={ngocontact} onChangeText={setngocontact} className='bg-white w-[300px] h-[50px] border rounded-md px-3 '></TextInput>
             <TextInput placeholder='Set Password' secureTextEntry={true} value={ngopassword} onChangeText={setngopassword} className='bg-white w-[300px] h-[50px] border rounded-md px-3'></TextInput>
             <Pressable className='border bg-white px-3 w-[300px] h-[50px]  rounded-md flex justify-center' onPress={() => setModalVisible(true)}>

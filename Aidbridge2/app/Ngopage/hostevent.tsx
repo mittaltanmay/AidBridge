@@ -5,6 +5,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 const {height } = Dimensions.get("window");
 import { DatePickerInput } from 'react-native-paper-dates';
 import { Picker } from '@react-native-picker/picker';
+import supabase from "../../config/supabaseClient";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HostEvent(){
     const router=useRouter();
@@ -41,21 +43,58 @@ export default function HostEvent(){
           setdate(date);
         }
     }
+    interface EventData {
+      id: string, 
+      event_name: string,
+      Description: string,
+      date: string,
+      time: string,
+  }
     function handleconfirm()
     {
       const selected_time=timestring(hours,minutes,ampm);
       const eventId = Date.now().toString(); // Unique ID
       const newEvent = {
           id: eventId, 
-          name:name,
-          description:description,
+          event_name:name,
+          Description:description,
           date: formateddate,
           time: selected_time,
       };    
+      registerEvent(newEvent);
       const updatedEventList = [...parsedEventList, newEvent];
       console.log(parsedEventList);
       router.push({ pathname: '/Ngopage/history', params: { eventList: JSON.stringify(updatedEventList) } });
     }
+    async function registerEvent(data: EventData): Promise<{ success: boolean; message: string }> {
+      const userDataString = await AsyncStorage.getItem('NGO');
+      if (!userDataString) {
+        console.log('Error: NGO not logged in');
+      }
+      console.log(userDataString);
+      // Parse the user data to get the user_id
+      const userData = JSON.parse(userDataString);
+      const NGO_id = userData.NGO_id;
+      const { id, event_name, Description, date, time} = data;
+    
+      try {
+          const { error } = await supabase
+              .from('Events')  // Your table name
+              .insert([{
+                id, event_name, Description, date, time, NGO_id
+              }]);
+            
+          if (error) {
+              console.error('Error during event listing', error.message);
+              return { success: false, message: error.message };
+          }
+          return { success: true, message: 'Event listing successful.' };
+      } catch (err) {
+          console.error('Unexpected error:', err);
+          return { success: false, message: 'Unexpected error occurred.' };
+      }
+    }
+
   return (
     <>
     <LinearGradient

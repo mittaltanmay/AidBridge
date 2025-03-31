@@ -16,10 +16,17 @@ export default function Login(){
 
     const handleLogin = async () => {
       try {
+        console.log("Raw NGO ID value:", NGO_id);
+        const parsedNGOId = parseInt(NGO_id, 10); // Ensure NGO_id is a valid number
+
+        if (isNaN(parsedNGOId)) {
+            Alert.alert('Login failed', 'Invalid NGO ID format.');
+            return;
+        }
           const { data, error } = await supabase
               .from('NGO')
               .select('*')
-              .eq('NGO_id', parseInt(NGO_id))
+              .eq('NGO_id', parsedNGOId)
               .eq('ngopassword', ngopassword)
               .eq('is_active', true);
 
@@ -31,7 +38,7 @@ export default function Login(){
 
           if (data && data.length > 0) {
               // Store the user session locally
-              await AsyncStorage.setItem('user', JSON.stringify(data[0]));
+              await AsyncStorage.setItem('NGO', JSON.stringify(data[0]));
               Alert.alert('Login successful', 'Welcome back!');
               router.push('../Ngopage/frontpage');
           } else {
@@ -55,11 +62,11 @@ export default function Login(){
               <Text className='text-5xl font-outfit-bold mt-14'>Login</Text>
               <View className='flex flex-col gap-2 mt-5 p-3 mb-5'>
                 <Text className='text-lg font-outfit-medium'>UserName</Text>
-                <TextInput className='bg-white border h-[50px] w-[300px] rounded-md'></TextInput>
+                <TextInput className='bg-white border h-[50px] w-[300px] rounded-md' value={NGO_id} onChangeText={text=>setUniqueNumber(text)}></TextInput>
                 <Text className='text-lg font-outfit-medium'>Password</Text>
-                <TextInput className='bg-white border h-[50px] w-[300px] rounded-md'></TextInput>
+                <TextInput secureTextEntry={true} className='bg-white border h-[50px] w-[300px] rounded-md' value={ngopassword} onChangeText={text=>setpassword(text)}></TextInput>
               </View>
-              <Pressable className='bg-black py-3 px-6 rounded-md mb-3' onPress={()=>{router.push('/Ngopage/frontpage')}}>
+              <Pressable className='bg-black py-3 px-6 rounded-md mb-3' onPress= {handleLogin}>
                 <Text className='text-white text-lg font-outfit-bold'>Login</Text>
               </Pressable>
             </View>
