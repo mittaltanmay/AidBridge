@@ -1,12 +1,47 @@
 import { View, Text,StyleSheet,Dimensions,KeyboardAvoidingView,ScrollView,Platform,Image,Pressable, TextInput} from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 const { width, height } = Dimensions.get("window");
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import supabase from '../../config/supabaseClient';
+import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Login(){
     const router=useRouter();
+    const navigation = useNavigation();
+    const [NGO_id, setUniqueNumber] = useState('');
+    const [ngopassword, setpassword] = useState('');
+
+    const handleLogin = async () => {
+      try {
+          const { data, error } = await supabase
+              .from('NGO')
+              .select('*')
+              .eq('NGO_id', parseInt(NGO_id))
+              .eq('ngopassword', ngopassword)
+              .eq('is_active', true);
+
+          if (error) {
+              console.error('Login error:', error.message);
+              Alert.alert('Login failed', error.message);
+              return;
+          }
+
+          if (data && data.length > 0) {
+              // Store the user session locally
+              await AsyncStorage.setItem('user', JSON.stringify(data[0]));
+              Alert.alert('Login successful', 'Welcome back!');
+              router.push('../Ngopage/frontpage');
+          } else {
+              Alert.alert('Login failed', 'Invalid credentials or account not activated.');
+          }
+      } catch (err) {
+          console.error('Unexpected error during login:', err);
+          Alert.alert('Error', 'Something went wrong.');
+      }
+  };
     return (
     <>
     <LinearGradient
