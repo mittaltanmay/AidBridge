@@ -30,9 +30,6 @@ export default function Index() {
           <Text className="text-2xl font-outfit-medium">Here to Help</Text>
         </View>
       </View>
-      <Text className="text-center -mt-5 font-outfit-medium text-lg">Already Have an Account?
-        <TouchableOpacity onPress={()=>(router.push('/auth/login'))}><Text className="font-outfit-medium text-blue-400 -mb-2 text-lg"> LogIn</Text></TouchableOpacity>
-      </Text>
     </View>
     <LinearGradient
         colors={["transparent", "lightgreen"]}

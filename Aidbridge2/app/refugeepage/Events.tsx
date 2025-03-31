@@ -70,7 +70,7 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
               const isEnrolled = enrolledEvents[event.id];
 
               return (
-                <View key={event.key} className="flex flex-col border  px-2 py-2 rounded-lg bg-white shadow-md">
+                <View key={event.key} className="flex flex-col border  px-2 py-2 rounded-lg bg-white">
                   <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
                   <Text className="font-outfit-semibold text-green-600 text-xl">
                     Organized by: <Text className="text-black font-outfit-medium">{event.ngo_name}</Text>

@@ -42,7 +42,7 @@ export default function LocateNgo(){
         latitude: lat + latitudeOffset,
         longitude: lon + longitudeOffset,
         name: `NGO ${i + 1}`, // Assign a name for testing
-        contact: `+91 98765 432${i}`, // Fake contact number
+        contact: `+91 99xxxxxx${i}`, // Fake contact number
       });
     }
     return newMarkers;

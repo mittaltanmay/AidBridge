@@ -1,11 +1,10 @@
 import { View, Text ,TouchableOpacity,Pressable,Dimensions,StyleSheet,Image} from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient';
 const {height } = Dimensions.get("window");
 import { faPlusCircle,faHistory } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-
 
 export default function Frontpage(){
     const router=useRouter();
@@ -18,6 +17,7 @@ export default function Frontpage(){
           </View>
         )
       }
+      const [eventList, setEventList] = useState<{ id: string; name: string; description: string; date: string; time: string; }[]>([]);
   return (
     <View className='flex flex-col h-full'>
     <LinearGradient
@@ -29,11 +29,13 @@ export default function Frontpage(){
     <View className='flex flex-col py-10 flex-1'>
       <Text className='text-4xl font-outfit-bold text-green-500 text-center'>NGO Dashboard</Text>
       <View className='flex flex-1 gap-5 mx-auto justify-center items-center'>
-        <Pressable className='border rounded-lg bg-white justify-center py-2 h-[150px] w-[150px] flex flex-col gap-5 items-center' onPress={()=>{router.push('/Ngopage/hostevent')}}>
+        <Pressable className='border rounded-lg bg-white justify-center py-2 h-[150px] w-[150px] flex flex-col gap-5 items-center'            
+        onPress={() => router.push({ pathname: '/Ngopage/hostevent', params: { eventList: JSON.stringify(eventList) } })}>
           <FontAwesomeIcon icon={faPlusCircle} size={45}/>
-          <Text className='font-outfit-semibold text-green-600 text-2xl' >Host Event</Text>
+          <Text className='font-outfit-semibold text-green-600 text-2xl text-wrap text-center'>Host New Event</Text>
         </Pressable>
-        <Pressable className='border rounded-lg bg-white justify-center py-2 h-[150px] w-[150px] flex flex-col gap-5 items-center' onPress={()=>{router.push('/Ngopage/history')}}>
+        <Pressable className='border rounded-lg bg-white justify-center py-2 px-2 h-[150px] w-[150pxx] flex flex-col gap-5 items-center' 
+          onPress={() => router.push({ pathname: '/Ngopage/history', params: { eventList: JSON.stringify(eventList) } })}>
           <FontAwesomeIcon icon={faHistory} size={45}/>
           <Text className='font-outfit-semibold text-green-600 text-2xl'>Hosted Events</Text>
         </Pressable>

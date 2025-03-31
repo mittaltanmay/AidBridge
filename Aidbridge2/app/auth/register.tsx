@@ -208,6 +208,9 @@ const Register = () => {
           <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
             <Text className='text-white font-outfit-bold text-xl'>Register</Text>
           </TouchableOpacity>
+          <Text className="text-center -mt-5 font-outfit-medium text-lg">Already Have an Account?
+            <TouchableOpacity onPress={()=>(router.push('/auth/login'))}><Text className="font-outfit-medium text-blue-400 -mb-2 text-lg"> LogIn</Text></TouchableOpacity>
+          </Text>
         </View>
       </ScrollView>
       </KeyboardAvoidingView>

@@ -1,4 +1,4 @@
-import { View, Text ,StyleSheet,Dimensions, KeyboardAvoidingView,Platform, Modal ,ScrollView,Image, TextInput, Pressable} from 'react-native'
+import { View, Text ,StyleSheet,Dimensions,TouchableOpacity, KeyboardAvoidingView,Platform, Modal ,ScrollView,Image, TextInput, Pressable} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -76,6 +76,9 @@ function handleregister() // all the info need to be stored in backend
             <Pressable className='bg-black px-4 py-3 rounded-md'>
               <Text className='font-outfit-semibold text-xl text-white' onPress={handleregister}>Register</Text>
             </Pressable>
+            <Text className="text-center -mt-5 font-outfit-medium text-lg">Already Have an Account?
+              <TouchableOpacity onPress={()=>(router.push('/authNgo/login'))}><Text className="font-outfit-medium text-blue-400 -mb-2 text-lg"> LogIn</Text></TouchableOpacity>
+            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
