@@ -42,7 +42,7 @@ interface NGOData {
   ngolocation: Region | null;
 }
 
-async function handleregister() // all the info need to be stored in backend
+function handleregister() // all the info need to be stored in backend
 {
   if(!NGO_id || !NGO_name || !ngocontact || !ngopassword) return;
   console.log(NGO_id,NGO_name,ngocontact,ngopassword);
@@ -53,19 +53,20 @@ async function handleregister() // all the info need to be stored in backend
     ngopassword,
     ngolocation
    };
-  const result=await registerUser(data);
-  if(result.success)
-  {
+  registerUser(data);
   setngo_id('');
   setngocontact('');
   setngo_name('');
   setngopassword('');
+  if (ngolocation) {
+    console.log("Selected Location:");
+    console.log("Latitude:", ngolocation.latitude); // for location to show on map for refugee
+    console.log("Longitude:", ngolocation.longitude); //for location to show on map for refugee
+  } else {
+    console.log("No location selected");
+  }
   setNgolocation(null);
   router.push('/authNgo/login');
-  } 
-  else {
-    console.error('Registration failed:', result.message);
-  }
   return;
 }
 async function registerUser(data: NGOData): Promise<{ success: boolean; message: string }> {
@@ -79,8 +80,8 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             NGO_name,
             ngocontact,
             ngopassword,
-            ngolocation:ngolocation?JSON.stringify(ngolocation):null,
-            is_active: true // Default to false
+            ngolocation: JSON.stringify(ngolocation),
+              is_active: true// Default to false
           }]);
 
       if (error) {
