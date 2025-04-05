@@ -22,7 +22,7 @@ const Register = () => {
   const [dob,setdob]=useState(undefined);
   const [unhcrid,setunhcrid]=useState('');
   const [country,setcountry]=useState('');
-  const [idImage, setIdImage] = useState<string | null>(null);
+  // const [idImage, setIdImage] = useState<string | null>(null);
   const router=useRouter();
     async function pickImage() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -38,7 +38,7 @@ const Register = () => {
     });
 
     if (!result.canceled) {
-      setIdImage(result.assets[0].uri);
+      // setIdImage(result.assets[0].uri);
       console.log("Selected Image URI:", result.assets[0].uri); // ✅ Log to console
     }
   }
@@ -56,7 +56,7 @@ const Register = () => {
     });
 
     if (!result.canceled) {
-      setIdImage(result.assets[0].uri);
+      // setIdImage(result.assets[0].uri);
       console.log("Captured Image URI:", result.assets[0].uri); // ✅ Log to console
     }
 
@@ -68,8 +68,7 @@ const Register = () => {
       dob,
       unhcrid: parseInt(unhcrid),
       country,
-      idImage,
-  };
+ };
 
   const response = await registerUser(data);
   Alert.alert(response.message);
@@ -84,7 +83,6 @@ const Register = () => {
     dob: undefined;
     unhcrid: number;
     country: string;
-    idImage: string | null;
 }
 
   function handleregister() {
@@ -98,15 +96,12 @@ const Register = () => {
       dob,
       unhcrid: parseInt(unhcrid),
       country,
-      idImage,
   };
     registerUser(data);
-
-    setName('');
+    setName(''); 
     setSelectedState('');
     setsublocation('');
     setdob(undefined);
-    setIdImage(null);
     setunhcrid('');
     setcountry('');
     router.push('/auth/login');
@@ -115,7 +110,7 @@ const Register = () => {
 
   // Registration function
   async function registerUser(data: UserData): Promise<{ success: boolean; message: string }> {
-  const { name, selectedState, sublocation, password, dob, unhcrid, country, idImage } = data;
+  const { name, selectedState, sublocation, password, dob, unhcrid, country} = data;
 
   try {
       const { error } = await supabase
@@ -125,7 +120,6 @@ const Register = () => {
               selectedState, sublocation, password, dob,
               unhcrid,       // Store hashed password ideally
               country, 
-              idImage,
               is_active: false // Default to false
           }]);
 
@@ -169,41 +163,41 @@ const Register = () => {
                   ))}
                 </Picker>
             </View>
-            {selectedState && locations[selectedState as keyof typeof locations] && (
-            <View className='bg-white border w-[300px] rounded-md'>
-              <Picker selectedValue={sublocation} onValueChange={(itemValue) => setsublocation(itemValue)}>
-                <Picker.Item label='Select Sublocation' value='' enabled={false} />
-                {locations[selectedState as keyof typeof locations].map((sub, index) => (
-                  <Picker.Item key={index} label={sub} value={sub} />
-                ))}
-              </Picker>
+              {selectedState && locations[selectedState as keyof typeof locations] && (
+              <View className='bg-white border w-[300px] rounded-md'>
+                <Picker selectedValue={sublocation} onValueChange={(itemValue) => setsublocation(itemValue)}>
+                  <Picker.Item label='Select Sublocation' value='' enabled={false} />
+                  {locations[selectedState as keyof typeof locations].map((sub, index) => (
+                    <Picker.Item key={index} label={sub} value={sub} />
+                  ))}
+                </Picker>
+              </View>
+            )}
+            <View className='h-10 bg-white w-[300px]'>
+              <DatePickerInput //DOB is stored in yyyy-mm-dd format
+              locale="en"
+              label="Date of Birth"
+              value={dob}
+              onChange={(d) => setdob(d)}
+              inputMode="start"
+              style={{backgroundColor:'white'}}
+              mode='outlined'
+              />
             </View>
-          )}
-          <View className='h-10 bg-white w-[300px]'>
-            <DatePickerInput //DOB is stored in yyyy-mm-dd format
-            locale="en"
-            label="Date of Birth"
-            value={dob}
-            onChange={(d) => setdob(d)}
-            inputMode="start"
-            style={{backgroundColor:'white'}}
-            mode='outlined'
-            />
-          </View>
-          <TextInput secureTextEntry={true}  placeholder='Create Pasword' className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium' value={password} onChangeText={setpassword}>
-          </TextInput>
-          <TouchableOpacity className="border px-4 py-4 bg-white rounded-md " onPress={takePhoto}>
-            <View className='flex flex-row gap-2 items-center'>
-              <FontAwesomeIcon icon={faCamera}/>
-              <Text className='text-black font-outfit-medium align-middle'>Take UNHCR ID Photo</Text>
-            </View>
-          </TouchableOpacity>
-          {idImage && (
-          <Image 
-              source={{ uri: idImage }} 
-              style={{ width: 300, height: 200, marginTop: 10, borderRadius: 0 }} 
-            />
-          )}
+            <TextInput secureTextEntry={true}  placeholder='Create Pasword' className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium' value={password} onChangeText={setpassword}>
+            </TextInput>
+            {/* <TouchableOpacity className="border px-4 py-4 bg-white rounded-md " onPress={takePhoto}>
+              <View className='flex flex-row gap-2 items-center'>
+                <FontAwesomeIcon icon={faCamera}/>
+                <Text className='text-black font-outfit-medium align-middle'>Take UNHCR ID Photo</Text>
+              </View>
+            </TouchableOpacity> */}
+            {/* {idImage && (
+            <Image 
+                source={{ uri: idImage }} 
+                style={{ width: 300, height: 200, marginTop: 10, borderRadius: 0 }} 
+              />
+            )} */}
           </View>
           <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
             <Text className='text-white font-outfit-bold text-xl'>Register</Text>
