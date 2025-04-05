@@ -4,6 +4,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
+import supabase from "../../config/supabaseClient";
 
 const NUM_NGO_MARKERS=10;
 export default function LocateNgo(){
@@ -28,25 +29,36 @@ export default function LocateNgo(){
       }
       // Get current location
       setLocation(usercoord);
-      setNgoMarkers(generateNearbyLocations(usercoord.latitude, usercoord.longitude, NUM_NGO_MARKERS));
-    };
+      const ngos = await fetchNgosFromSupabase();
+      setNgoMarkers(ngos);    };
     fetchLocation();
   }, []);
-  const generateNearbyLocations = (lat: number, lon: number, num: number) => {
-    const newMarkers = [];
-    for (let i = 0; i < num; i++) {
-      const latitudeOffset = (Math.random() - 0.5) * 0.03; // Randomly offset lat by ±0.01
-      const longitudeOffset = (Math.random() - 0.5) * 0.03; // Randomly offset lon by ±0.01
-
-      newMarkers.push({
-        latitude: lat + latitudeOffset,
-        longitude: lon + longitudeOffset,
-        name: `NGO ${i + 1}`, // Assign a name for testing
-        contact: `+91 99xxxxxx${i}`, // Fake contact number
-      });
+  const fetchNgosFromSupabase = async () => {
+    try {
+      const { data, error } = await supabase
+      .from('NGO') // Replace 'ngos' with your actual table name
+      .select('*')
+      .not('ngolocation->>latitude', 'is', null)
+      .not('ngolocation->>longitude', 'is', null)
+      .not('ngocontact', 'is', null);
+  
+      if (error) {
+        console.error("Error fetching NGO data:", error);
+        return [];
+      }
+  
+      return data.map((NGO: any) => ({
+        latitude: NGO.ngolocation.latitude,
+        longitude: NGO.ngolocation.longitude,
+        name: NGO.NGO_name,
+        contact: NGO.ngocontact,
+      }));
+    } catch (err) {
+      console.error("Error in fetching NGOs:", err);
+      return [];
     }
-    return newMarkers;
   };
+  
   return (
     <View className='items-start -mt-9 flex px-2 h-[50%] w-full gap-5'>
       <MapView
