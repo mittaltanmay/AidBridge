@@ -1,12 +1,52 @@
 import { View, Text ,TouchableOpacity,Pressable,Dimensions,StyleSheet,Image, KeyboardAvoidingView, Platform, ScrollView} from 'react-native'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { useRouter , useLocalSearchParams} from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient';
 const {height } = Dimensions.get("window");
+import AsyncStorage from '@react-native-async-storage/async-storage' // ✅ Added
+import supabase from '../../config/supabaseClient' // ✅ Added
 
 
 export default function History(){
     const router=useRouter();
+    interface EventData {
+      id: number;                // Matches `bigint` → `number` in JS
+      event_name: string | null; // text can be null → make it nullable
+      Description: string | null;// text can be null → nullable
+      date: string | null;       // `date` returns as ISO string or null
+      time: string;              // time → string (always not null)
+      NGO_id: number | null;     // bigint nullable → number or null
+    }
+    const [events, setEvents] = useState<EventData[]>([]);
+    useEffect(() => {
+      const fetchEvents = async () => {
+        try {
+          const userDataString = await AsyncStorage.getItem('NGO')
+          if (!userDataString) {
+            console.log('No NGO user found in storage')
+            return
+          }
+  
+          const userData = JSON.parse(userDataString)
+          const NGO_id = userData.NGO_id
+  
+          const { data, error } = await supabase
+            .from('Events')
+            .select('*')
+            .eq('NGO_id', NGO_id)
+  
+          if (error) {
+            console.error('Error fetching events:', error.message)
+          } else {
+            setEvents(data)
+          }
+        } catch (error) {
+          console.error('Unexpected error:', error)
+        }
+      }
+  
+      fetchEvents()
+    }, [])
      function header()
       {
         return(
@@ -16,8 +56,6 @@ export default function History(){
           </View>
         )
       }
-      const { eventList } = useLocalSearchParams();
-      const parsedEventList = eventList ? JSON.parse(eventList as string) : [];
   return (
     <>
     <LinearGradient
@@ -26,27 +64,28 @@ export default function History(){
       style={[styles.shadowOverlay, { top: 0 }]}
     />
     {header()}
-    <View className='flex flex-col items-center justify-center flex-1 py-5'>
+    <View className='flex flex-col items-center justify-center flex-1 py-5 '>
       <Text className='text-4xl font-outfit-bold'>Events Hosted</Text>
       <ScrollView>
-          <View className='flex flex-col py-10 flex-1'>
-          {parsedEventList.length > 0 ? (
-            parsedEventList.map((event: any) => (
-              <View key={event.id} className= "flex w-[380px] flex-col border px-2 py-2 rounded-lg bg-white">
-               <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
-                <Text className="font-outfit-semibold text-green-600 text-xl">
-                  Organized by: <Text className="text-black font-outfit-medium">Fetch from Backend</Text>
-                </Text>
-                <Text className="text-xl text-green-600 font-outfit-semibold">
-                  Description: <Text className="text-black text-xl font-outfit-medium">{event.description}</Text>
-                </Text>
-                <Text className="text-green-600 text-lg font-outfit-semibold">
-                  📅{event.date}|⏰{event.time}
-                </Text>
-            </View>
-              ))
+          <View className='flex flex-col py-10 flex-1 w-[370px]'>
+          {events.length === 0 ? (
+            <Text className="text-center text-gray-500 mt-10">No events found.</Text>
             ) : (
-              <Text className="text-gray-500 text-xl font-outfit-semibold">No events found.</Text>
+              events.map((event) => (
+                <View
+                  key={event.id}
+                  className="bg-white border rounded-lg p-4 mb-4 flex flex-col gap-2">
+                  <Text className="text-3xl text-green-500 font-outfit-bold">{event.event_name}</Text>
+                  <Text className="text-2xl text-green-500 font-outfit-bold">Decription: <Text className='text-xl font-outfit-semibold text-black'>{event.Description}</Text></Text>
+                  <Text className="text-2xl text-green-500 font-outfit-bold">📅 Date: <Text className='text-black font-outfit-semibold text-xl'>
+                    {event.date ? new Date(event.date).toLocaleDateString('en-GB') : 'No date provided'}</Text>
+                    </Text>
+                  <Text className="text-green-500 text-2xl font-outfit-bold">⏰ Time: <Text className='text-xl font-outfit-semibold text-black'>
+                    {event.time}
+                    </Text>
+                  </Text>
+                </View>
+              ))
             )}
           </View>
       </ScrollView>

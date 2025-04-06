@@ -38,7 +38,7 @@ export default function HostEvent(){
     {
       if(date)
         {
-          const temp_date_string=date.toLocaleDateString("en-GB");
+          const temp_date_string=date.toISOString().split("T")[0];
           setformateddate(temp_date_string);
           setdate(date);
         }
@@ -64,7 +64,7 @@ export default function HostEvent(){
       registerEvent(newEvent);
       const updatedEventList = [...parsedEventList, newEvent];
       console.log(parsedEventList);
-      router.push({ pathname: '/Ngopage/history', params: { eventList: JSON.stringify(updatedEventList) } });
+      router.push('/Ngopage/history');
     }
     async function registerEvent(data: EventData): Promise<{ success: boolean; message: string }> {
       const userDataString = await AsyncStorage.getItem('NGO');
