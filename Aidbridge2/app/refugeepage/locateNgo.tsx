@@ -30,7 +30,9 @@ export default function LocateNgo(){
       // Get current location
       setLocation(usercoord);
       const ngos = await fetchNgosFromSupabase();
-      setNgoMarkers(ngos);    };
+      setNgoMarkers(ngos);    
+      console.log("Fetched NGO markers:", ngos);
+    };
     fetchLocation();
   }, []);
   const fetchNgosFromSupabase = async () => {
@@ -38,8 +40,7 @@ export default function LocateNgo(){
       const { data, error } = await supabase
       .from('NGO') // Replace 'ngos' with your actual table name
       .select('*')
-      .not('ngolocation->>latitude', 'is', null)
-      .not('ngolocation->>longitude', 'is', null)
+      .not('ngolocation', 'is', null)
       .not('ngocontact', 'is', null);
   
       if (error) {
@@ -47,12 +48,27 @@ export default function LocateNgo(){
         return [];
       }
   
-      return data.map((NGO: any) => ({
-        latitude: NGO.ngolocation.latitude,
-        longitude: NGO.ngolocation.longitude,
-        name: NGO.NGO_name,
-        contact: NGO.ngocontact,
-      }));
+      return data.map((NGO: any) => {
+        let location;
+        try {
+          location = JSON.parse(NGO.ngolocation);
+        } catch (parseError) {
+          console.warn("Failed to parse location for NGO:", NGO.NGO_name);
+          return null;
+        }
+        const latitude = parseFloat(location.latitude);
+        const longitude = parseFloat(location.longitude);
+        if (isNaN(latitude) || isNaN(longitude)) return null;
+
+        return {
+          latitude,
+          longitude,
+          name: NGO.NGO_name as string,
+          contact: String(NGO.ngocontact),
+        };        
+      }).filter(
+        (ngo): ngo is { latitude: number; longitude: number; name: string; contact: string } =>
+          ngo !== null);
     } catch (err) {
       console.error("Error in fetching NGOs:", err);
       return [];
