@@ -1,6 +1,7 @@
 import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
 import { Event }  from './Events';
+import supabase from "../../config/supabaseClient";
 
 interface frontpageprops{
   events: Event[];
@@ -39,13 +40,13 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
           enrolledEventsList.length<=0?<Text className='text-center font-outfit-light'>You haven't enrolled for any event enroll for event by clicking on <Text className='font-outfit-bold '>Events</Text> on footer.</Text>:
           enrolledEventsList.map(event => (
             <View key={event.id} className="flex flex-col border px-1 py-2 rounded-lg bg-white shadow-md">
-              <Text className="font-outfit-semibold text-xl text-green-600">{event.name}</Text>
+              <Text className="font-outfit-semibold text-xl text-green-600">{event.event_name}</Text>
               <Text className="font-outfit-semibold text-green-600 text-xl">
-                Organized by: <Text className="text-black font-outfit-medium">{event.ngo_name}</Text>
+                Organized by: <Text className="text-black font-outfit-medium">{event.NGO_name}</Text>
               </Text>
               <Text className="text-xl text-green-600 font-outfit-semibold">
                 Description:
-                <Text className="text-black text-xl font-outfit-medium"> {event.description}</Text>
+                <Text className="text-black text-xl font-outfit-medium"> {event.Description}</Text>
               </Text>
               <Text className="text-green-600 text-lg font-outfit-semibold">
                 📅 {event.date} | ⏰ {event.time}
