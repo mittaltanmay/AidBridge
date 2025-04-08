@@ -61,7 +61,7 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
     <View className="flex flex-col gap-10 items-center py-2 px-1">
       <ScrollView>
         <View className="flex flex-col border py-2 px-2 w-[380] gap-5 rounded-lg">
-          <Text className="font-outfit-bold text-center text-xl">Events Near You</Text>
+          <Text className="font-outfit-bold text-center text-xl">Listed Events</Text>
 
           {loading ? (
             <ActivityIndicator size="large" color="#4CAF50" />
