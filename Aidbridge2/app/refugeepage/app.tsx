@@ -58,7 +58,7 @@ export default function App()
       // Fetch all events
       const { data: eventData } = await supabase
       .from('Events')
-      .select('*');
+      .select('id, event_name, Description, date, time, NGO_id, NGO(NGO_name)');
       if (eventData) 
       setEvents(eventData);
       const userDataString = await AsyncStorage.getItem('user');

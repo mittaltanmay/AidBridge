@@ -42,7 +42,7 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
             <View key={event.id} className="flex flex-col border px-1 py-2 rounded-lg bg-white shadow-md">
               <Text className="font-outfit-semibold text-xl text-green-600">{event.event_name}</Text>
               <Text className="font-outfit-semibold text-green-600 text-xl">
-                Organized by: <Text className="text-black font-outfit-medium">{event.NGO_name}</Text>
+                Organized by: <Text className="text-black font-outfit-medium">{event.NGO.NGO_name}</Text>
               </Text>
               <Text className="text-xl text-green-600 font-outfit-semibold">
                 Description:
