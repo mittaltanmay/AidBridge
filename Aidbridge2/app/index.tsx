@@ -13,9 +13,10 @@ export default function Index() {
         style={[styles.shadowOverlay, { top: 0 }]}
       />
     <View className="flex gap-20 px-5 py-5 items-center">
-      <Image className="w-[150px] h-[150px] mt-5 border" source={require('./../assets/images/logo7.webp')} />
+      <Image className="w-[150px] h-[150px] mt-10 border" source={require('./../assets/images/logo7.webp')}/>
       <Text className="text-5xl font-outfit-bold text-center underline">WELCOME</Text>
-      <View className="flex flex-col justify-center items-center gap-5 mt-15" >
+      <Text className="-mb-10 -mt-10 text-xl font-outfit-semibold">You are a:</Text>
+      <View  className="flex flex-col justify-center items-center gap-5 mt-15" >
         <View className='flex flex-row gap-5 items-center'>
             <TouchableOpacity className="Button" onPress={()=>router.push('/auth/register')}>
               <Text className="font-outfit-bold text-2xl text-white">Refugee</Text>

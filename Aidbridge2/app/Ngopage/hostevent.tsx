@@ -64,7 +64,7 @@ export default function HostEvent(){
       registerEvent(newEvent);
       const updatedEventList = [...parsedEventList, newEvent];
       console.log(parsedEventList);
-      router.push('/Ngopage/history');
+      router.push('/Ngopage/frontpage');
     }
     async function registerEvent(data: EventData): Promise<{ success: boolean; message: string }> {
       const userDataString = await AsyncStorage.getItem('NGO');
