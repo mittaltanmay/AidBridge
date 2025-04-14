@@ -1,4 +1,4 @@
-import { View, Text, TextInput,StyleSheet, Pressable } from 'react-native'
+import { View, Text, TextInput,StyleSheet, Pressable,Modal } from 'react-native'
 import React, { useState } from 'react'
 import { Picker } from '@react-native-picker/picker' 
 import supabase from '../../config/supabaseClient'
@@ -8,6 +8,7 @@ const Issue = () => {
   const [category,setcategory]=useState('');
   const [description,setdescription]=useState('');
   const [height, setHeight] = useState(0); // Initial height
+  const [modalVisible, setModalVisible] = useState(false);
   const handleSubmit = async () => {
     try {
     // Fetch the stored user data from AsyncStorage
@@ -28,9 +29,12 @@ const Issue = () => {
       console.log(`Error: ${error.message}`);
     } else {
       console.log('Data inserted successfully!');
+      setModalVisible(true);
     } }catch(error) {
       console.log(`Unexpected error: ${error}`);
     }
+    setcategory('');
+    setdescription('');
   };
 
   return (
@@ -56,6 +60,21 @@ const Issue = () => {
       <Pressable className='px-5 py-3 bg-black rounded-md' onPress={handleSubmit}> 
         <Text className=' text-white font-outfit-bold text-xl'>Submit</Text>
       </Pressable>
+      <Modal
+        transparent={true}
+        animationType='fade'
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-5 rounded-2xl w-[80%] items-center">
+            <Text className="font-outfit-bold text-xl mb-3 text-green-600">Your response has been recorded!</Text>
+            <Pressable onPress={() => setModalVisible(false)} className="bg-black px-4 py-2 rounded-md">
+              <Text className="text-white font-outfit-bold">Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
