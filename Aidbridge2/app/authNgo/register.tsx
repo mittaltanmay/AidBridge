@@ -81,7 +81,7 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             ngocontact,
             ngopassword,
             ngolocation: JSON.stringify(ngolocation),
-              is_active: true// Default to false
+            is_active: false// Default to false
           }]);
 
       if (error) {

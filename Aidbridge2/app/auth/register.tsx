@@ -120,7 +120,7 @@ const Register = () => {
               selectedState, sublocation, password, dob,
               unhcrid,       // Store hashed password ideally
               country, 
-              is_active: true // Default to false
+              is_active: false // Default to false
           }]);
 
       if (error) {
