@@ -1,8 +1,10 @@
-import { View, Text, ScrollView } from 'react-native';
-import React from 'react';
+import { View, Text, ScrollView, Pressable } from 'react-native';
+import React, { useState } from 'react';
 import { Event }  from './Events';
+import { faStar } from '@fortawesome/free-solid-svg-icons'; 
 import supabase from "../../config/supabaseClient";
-
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { Picker } from '@react-native-picker/picker';
 interface frontpageprops{
   events: Event[];
   enrolledEvents:{ [key:string]:boolean };
@@ -16,6 +18,16 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0); // Reset time to midnight to include same-day events
 
+  const formatDate = (dateStr: string): string => {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
+  const formatTime = (timeStr: string): string => {
+    const [hour, minute] = timeStr.split(':');
+    return `${hour}:${minute}`;
+  };
+
   // Function to convert 'dd-mm-yyyy' string to Date object
   const parseDate = (dateStr: string): Date => {
     const [year, month, day] = dateStr.split('-').map(Number);
@@ -24,36 +36,81 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   };
 
   const enrolledEventsList = events
-  .filter(event => enrolledEvents[String(event.id)]) // Keep only events where the user enrolled
-  // .filter(event => parseDate(event.date) >= currentDate) // Remove past events
-  .sort((a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime()); // Sort by nearest date
+  .filter(event => enrolledEvents[String(event.id)])
+  .filter(event => parseDate(event.date) >= currentDate)
+  .sort((a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime());
 
-  console.log('🎯 Filtered Enrolled Events:', enrolledEventsList);
+const pastEventsList = events
+  .filter(event => enrolledEvents[String(event.id)])
+  .filter(event => parseDate(event.date) < currentDate)
+  .sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime()); // optional: show most recent first
 
+console.log('🎯 Upcoming Enrolled Events:', enrolledEventsList);
+console.log('🎯 Past Events to Rate:', pastEventsList); 
+const [ratings, setRatings] = useState<{ [key: number]: number }>({});
   return (
     <View className="flex flex-col gap-10 items-center py-2 px-2">
       <Text className="font-outfit-bold text-5xl text-green-500">Your Dashboard</Text>
       <ScrollView>
         <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg w-[370]">
-          <Text className="font-outfit-bold text-center text-xl">Enrolled Events</Text>
+          <Text className="font-outfit-bold text-center text-xl">Upcoming Events</Text>
           {
           enrolledEventsList.length<=0?<Text className='text-center font-outfit-light'>You haven't enrolled for any event enroll for event by clicking on <Text className='font-outfit-bold '>Events</Text> on footer.</Text>:
           enrolledEventsList.map(event => (
             <View key={event.id} className="flex flex-col border px-1 py-2 rounded-lg bg-white shadow-md">
-              <Text className="font-outfit-semibold text-xl text-green-600">{event.event_name}</Text>
-              <Text className="font-outfit-semibold text-green-600 text-xl">
+              <Text className="font-outfit-bold text-xl text-green-600">{event.event_name}</Text>
+              <Text className="font-outfit-bold text-green-600 text-xl">
                 Organized by: <Text className="text-black font-outfit-medium">{event.NGO.NGO_name}</Text>
               </Text>
               <Text className="text-xl text-green-600 font-outfit-semibold">
                 Description:
                 <Text className="text-black text-xl font-outfit-medium"> {event.Description}</Text>
               </Text>
-              <Text className="text-green-600 text-lg font-outfit-semibold">
-                📅 {event.date} | ⏰ {event.time}
+              <Text className="text-green-600 text-lg font-outfit-bold">
+                📅 {formatDate(event.date)} | ⏰ {formatTime(event.time)}
               </Text>
             </View>
           ))}
         </View>
+        {
+          pastEventsList.length > 0 && (
+            <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg w-[370] mt-10">
+              <Text className="font-outfit-bold text-center text-xl">Rate Events You Attended</Text>
+              {
+                pastEventsList.map(event => (
+                  <View key={event.id} className="flex flex-col border px-1 py-2 rounded-lg bg-white shadow-md">
+                    <Text className="font-outfit-bold text-xl text-green-600">{event.event_name}</Text>
+                    <Text className="font-outfit-bold text-green-600 text-xl">
+                      Organized by: <Text className="text-black font-outfit-medium">{event.NGO.NGO_name}</Text>
+                    </Text>
+                    <View className='flex flex-row items-center gap-2'>
+                      <View className='flex flex-row items-start -mt-1'>
+                          <View className='flex items-center flex-row'>
+                            <FontAwesomeIcon icon={faStar} color='green' size={20}/>
+                            <Text className='text-2xl font-outfit-bold mt-1 text-green-600'>Ratings:</Text>
+                          </View>
+                          <View className='border ml-2 rounded-md mt-1'>
+                              <Picker
+                                selectedValue={ratings[event.id] ?? 0}
+                                onValueChange={(value) => setRatings(prev => ({ ...prev, [event.id]: value }))}
+                                style={{ height: 49, width: 100}}
+                                mode="dropdown">
+                                {[0, 1, 2, 3, 4, 5].map(rating => (
+                                  <Picker.Item key={rating} label={rating.toString()} value={rating}/>
+                                ))}
+                            </Picker>
+                          </View>
+                      </View>
+                      <Pressable className='px-8 py-3  bg-green-500 rounded-md'>
+                      <Text className='text-xl font-outfit-bold text-white'>Submit</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                ))
+              }
+            </View>
+          )
+        }
       </ScrollView>
     </View>
   );
