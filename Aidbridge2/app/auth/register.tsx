@@ -186,26 +186,14 @@ const Register = () => {
             </View>
             <TextInput secureTextEntry={true}  placeholder='Create Pasword' className='bg-white border w-[300px] h-[50px] px-5 rounded-md font-outfit-medium' value={password} onChangeText={setpassword}>
             </TextInput>
-            {/* <TouchableOpacity className="border px-4 py-4 bg-white rounded-md " onPress={takePhoto}>
-              <View className='flex flex-row gap-2 items-center'>
-                <FontAwesomeIcon icon={faCamera}/>
-                <Text className='text-black font-outfit-medium align-middle'>Take UNHCR ID Photo</Text>
-              </View>
-            </TouchableOpacity> */}
-            {/* {idImage && (
-            <Image 
-                source={{ uri: idImage }} 
-                style={{ width: 300, height: 200, marginTop: 10, borderRadius: 0 }} 
-              />
-            )} */}
+            </View>
+              <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
+                <Text className='text-white font-outfit-bold text-xl'>Register</Text>
+              </TouchableOpacity>
+              <Text className="text-center -mt-5 font-outfit-medium text-lg">Already Have an Account?
+              <TouchableOpacity onPress={()=>(router.push('/auth/login'))}><Text className="font-outfit-medium text-blue-400 -mb-2 text-lg"> LogIn</Text></TouchableOpacity>
+            </Text>
           </View>
-          <TouchableOpacity className="border py-3 px-5 bg-black rounded-lg" onPress={handleregister}>
-            <Text className='text-white font-outfit-bold text-xl'>Register</Text>
-          </TouchableOpacity>
-          <Text className="text-center -mt-5 font-outfit-medium text-lg">Already Have an Account?
-            <TouchableOpacity onPress={()=>(router.push('/auth/login'))}><Text className="font-outfit-medium text-blue-400 -mb-2 text-lg"> LogIn</Text></TouchableOpacity>
-          </Text>
-        </View>
       </ScrollView>
       </KeyboardAvoidingView>
       <LinearGradient

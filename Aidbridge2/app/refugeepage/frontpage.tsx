@@ -11,12 +11,11 @@ interface frontpageprops{
 }
 export default function FrontPage({events, enrolledEvents}:frontpageprops){
 
-  console.log('📌 Events in FrontPage:', events);
-  console.log('📌 Enrolled Events in FrontPage:', enrolledEvents);
+  // console.log('📌 Events in FrontPage:', events);
+  // console.log('📌 Enrolled Events in FrontPage:', enrolledEvents);
 
-  // Get current date in format 'dd-mm-yyyy'
   const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0); // Reset time to midnight to include same-day events
+  currentDate.setHours(0, 0, 0, 0); 
 
   const formatDate = (dateStr: string): string => {
     const [year, month, day] = dateStr.split('-');
@@ -28,7 +27,6 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
     return `${hour}:${minute}`;
   };
 
-  // Function to convert 'dd-mm-yyyy' string to Date object
   const parseDate = (dateStr: string): Date => {
     const [year, month, day] = dateStr.split('-').map(Number);
     console.log('Parsing Date:', dateStr, '->', new Date(year, month - 1, day));
@@ -40,14 +38,18 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   .filter(event => parseDate(event.date) >= currentDate)
   .sort((a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime());
 
-const pastEventsList = events
-  .filter(event => enrolledEvents[String(event.id)])
-  .filter(event => parseDate(event.date) < currentDate)
-  .sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime()); // optional: show most recent first
+  const pastEventsList = events
+    .filter(event => enrolledEvents[String(event.id)])
+    .filter(event => parseDate(event.date) < currentDate)
+    .sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime()); 
 
-console.log('🎯 Upcoming Enrolled Events:', enrolledEventsList);
-console.log('🎯 Past Events to Rate:', pastEventsList); 
-const [ratings, setRatings] = useState<{ [key: number]: number }>({});
+  // console.log('🎯 Upcoming Enrolled Events:', enrolledEventsList);
+  // console.log('🎯 Past Events to Rate:', pastEventsList); 
+  const [ratings, setRatings] = useState<{ [key: number]: number }>({});
+  function handlesumbit(id)
+  {
+    console.log("ratings submitted",ratings[id]);
+  }
   return (
     <View className="flex flex-col gap-10 items-center py-2 px-2">
       <Text className="font-outfit-bold text-5xl text-green-500">Your Dashboard</Text>
@@ -101,8 +103,8 @@ const [ratings, setRatings] = useState<{ [key: number]: number }>({});
                             </Picker>
                           </View>
                       </View>
-                      <Pressable className='px-8 py-3  bg-green-500 rounded-md'>
-                      <Text className='text-xl font-outfit-bold text-white'>Submit</Text>
+                      <Pressable className='px-8 py-3  bg-green-500 rounded-md' onPress={()=>{handlesumbit(event.id)}}>
+                        <Text className='text-xl font-outfit-bold text-white'>Submit</Text>
                       </Pressable>
                     </View>
                   </View>

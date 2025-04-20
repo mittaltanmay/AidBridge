@@ -16,6 +16,7 @@ const [NGO_name,setngo_name]=useState('');
 const [ngopassword,setngopassword]=useState('');
 const [ngolocation,setNgolocation]=useState<Region|null>(null);
 const [modalVisible, setModalVisible] = useState(false);
+const [ngostate,setngostate]=useState('');
 useEffect(() => {
   (async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -42,9 +43,11 @@ interface NGOData {
   ngolocation: Region | null;
 }
 
-function handleregister() // all the info need to be stored in backend
+function handleregister() 
 {
   if(!NGO_id || !NGO_name || !ngocontact || !ngopassword) return;
+  const state_input=ngostate[0].toUpperCase();
+  setngostate(state_input);
   console.log(NGO_id,NGO_name,ngocontact,ngopassword);
   const data = {
     NGO_id : parseInt(NGO_id),
@@ -58,10 +61,12 @@ function handleregister() // all the info need to be stored in backend
   setngocontact('');
   setngo_name('');
   setngopassword('');
+  setngostate('');
+  console.log(ngostate);
   if (ngolocation) {
     console.log("Selected Location:");
-    console.log("Latitude:", ngolocation.latitude); // for location to show on map for refugee
-    console.log("Longitude:", ngolocation.longitude); //for location to show on map for refugee
+    console.log("Latitude:", ngolocation.latitude); 
+    console.log("Longitude:", ngolocation.longitude); 
   } else {
     console.log("No location selected");
   }
@@ -81,20 +86,19 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             ngocontact,
             ngopassword,
             ngolocation: JSON.stringify(ngolocation),
-            is_active: false// Default to false
+            is_active: false
           }]);
-
-      if (error) {
-          console.error('Error during registration:', error.message);
-          return { success: false, message: error.message };
-      }
+        if (error) {
+            console.error('Error during registration:', error.message);
+            return { success: false, message: error.message };
+        }
       return { success: true, message: 'Registration successful. Await admin approval.' };
-  } catch (err) {
-      console.error('Unexpected error:', err);
-      return { success: false, message: 'Unexpected error occurred.' };
-  }
-}
-
+      } 
+      catch (err) {
+          console.error('Unexpected error:', err);
+          return { success: false, message: 'Unexpected error occurred.' };
+      }
+    }
   return (
     <>
      <LinearGradient
@@ -114,6 +118,7 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             <TextInput placeholder='Enter NGO Name' value={NGO_name} onChangeText={setngo_name} className='bg-white w-[300px] h-[50px] border rounded-md px-3 -mt-5'></TextInput>
             <TextInput placeholder='Contact' value={ngocontact} onChangeText={setngocontact} className='bg-white w-[300px] h-[50px] border rounded-md px-3 '></TextInput>
             <TextInput placeholder='Set Password' secureTextEntry={true} value={ngopassword} onChangeText={setngopassword} className='bg-white w-[300px] h-[50px] border rounded-md px-3'></TextInput>
+            <TextInput value={ngostate} onChangeText={setngostate} className='border rounded-md bg-white px-3 w-[300px] h-[50px]' placeholder='Enter State of Operation'></TextInput>
             <Pressable className='border bg-white px-3 w-[300px] h-[50px]  rounded-md flex justify-center' onPress={() => setModalVisible(true)}>
               <Text className='text-black'>Enter Loaction</Text>
             </Pressable>
