@@ -7,6 +7,7 @@ import * as Location from 'expo-location';
 import MapView, { Marker, Region } from 'react-native-maps';
 const { width, height } = Dimensions.get("window");
 import supabase from "../../config/supabaseClient";
+import { state } from '@/utils/loaction';
 
 export default function Register(){
 const router=useRouter();
@@ -41,11 +42,12 @@ interface NGOData {
   ngocontact: number;
   ngopassword: string;
   ngolocation: Region | null;
+  ngostate: string;
 }
 
 function handleregister() 
 {
-  if(!NGO_id || !NGO_name || !ngocontact || !ngopassword) return;
+  if(!NGO_id || !NGO_name || !ngocontact || !ngopassword || !ngostate) return;
   const state_input=ngostate[0].toUpperCase();
   setngostate(state_input);
   console.log(NGO_id,NGO_name,ngocontact,ngopassword);
@@ -54,7 +56,8 @@ function handleregister()
     NGO_name,
     ngocontact : parseInt(ngocontact),
     ngopassword,
-    ngolocation
+    ngolocation,
+    ngostate
    };
   registerUser(data);
   setngo_id('');
@@ -75,7 +78,7 @@ function handleregister()
   return;
 }
 async function registerUser(data: NGOData): Promise<{ success: boolean; message: string }> {
-  const { NGO_id, NGO_name, ngocontact, ngopassword, ngolocation } = data;
+  const { NGO_id, NGO_name, ngocontact, ngopassword, ngolocation, ngostate } = data;
 
   try {
       const { error } = await supabase
@@ -86,6 +89,7 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             ngocontact,
             ngopassword,
             ngolocation: JSON.stringify(ngolocation),
+            ngostate,
             is_active: false
           }]);
         if (error) {
@@ -120,7 +124,7 @@ async function registerUser(data: NGOData): Promise<{ success: boolean; message:
             <TextInput placeholder='Set Password' secureTextEntry={true} value={ngopassword} onChangeText={setngopassword} className='bg-white w-[300px] h-[50px] border rounded-md px-3'></TextInput>
             <TextInput value={ngostate} onChangeText={setngostate} className='border rounded-md bg-white px-3 w-[300px] h-[50px]' placeholder='Enter State of Operation'></TextInput>
             <Pressable className='border bg-white px-3 w-[300px] h-[50px]  rounded-md flex justify-center' onPress={() => setModalVisible(true)}>
-              <Text className='text-black'>Enter Loaction</Text>
+              <Text className='text-black'>Enter Location</Text>
             </Pressable>
             <Pressable className='bg-black px-4 py-3 rounded-md'>
               <Text className='font-outfit-semibold text-xl text-white' onPress={handleregister}>Register</Text>

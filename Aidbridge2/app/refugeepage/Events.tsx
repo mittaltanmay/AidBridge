@@ -32,11 +32,23 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
+      const userDataString = await AsyncStorage.getItem('user');
+      if (!userDataString) {
+        console.log('Error: User not logged in');
+        return;
+      }
+      const userData = JSON.parse(userDataString);
+      const ref_state = userData.selectedState;
       const { data, error } = await supabase
         .from('Events')
-        .select('id, event_name, Description, date, time, NGO_id, NGO(NGO_name)') // Joining NGOs table to get NGO name
+        .select('id, event_name, Description, date, time, NGO_id, NGO!inner(NGO_name, ngostate)') // Joining NGOs table to get NGO name
+        .ilike('NGO.ngostate', ref_state)
         .order('date', { ascending: true }); // Sorting by date
 
+        console.log("ref_state:", ref_state);
+        console.log("Data:", data);
+        console.log("Error:", error);
+        
       if (error) {
         console.error('Error fetching events:', error);
       } else {
