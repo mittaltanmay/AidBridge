@@ -46,8 +46,59 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   // console.log('🎯 Upcoming Enrolled Events:', enrolledEventsList);
   // console.log('🎯 Past Events to Rate:', pastEventsList); 
   const [ratings, setRatings] = useState<{ [key: number]: number }>({});
+
+  const addRatingToEvent = async (eventId, newRating) => {
+    const { data: eventData, error: fetchError } = await supabase
+      .from('Events')
+      .select('Ratings, NGO_id')
+      .eq('id', eventId)
+      .single();
+  
+    if (fetchError) {
+      console.error("Fetch error:", fetchError);
+      return;
+    }
+  
+    const updatedArray = [...(eventData.Ratings || []), newRating];
+    const avg = updatedArray.reduce((a, b) => a + b, 0) / updatedArray.length;
+  
+    const { error: updateError } = await supabase
+      .from('Events')
+      .update({ Ratings: updatedArray, Avg_rating: avg })
+      .eq('id', eventId);
+  
+    if (updateError) console.error("Update error:", updateError);
+
+    const { data: ngoEvents, error: fetchNgoEventsError } = await supabase
+    .from('Events')
+    .select('Avg_rating')
+    .eq('NGO_id', eventData.NGO_id);
+
+  if (fetchNgoEventsError) {
+    console.error("Error fetching NGO's events:", fetchNgoEventsError);
+    return;
+  }
+
+  const ngoAvg = ngoEvents
+    .map(e => e.Avg_rating)
+    .filter(r => typeof r === 'number')
+    .reduce((a, b) => a + b, 0) / ngoEvents.length;
+
+  // 4. Update NGO table
+  const { error: updateNgoError } = await supabase
+    .from('NGO')
+    .update({ Avg_rating: ngoAvg })
+    .eq('NGO_id', eventData.NGO_id);
+
+  if (updateNgoError) {
+    console.error("Error updating NGO avg rating:", updateNgoError);
+  }
+
+  };
+  
   function handlesumbit(id)
   {
+    addRatingToEvent(id, ratings[id]);
     console.log("ratings submitted",ratings[id]);
   }
   return (
