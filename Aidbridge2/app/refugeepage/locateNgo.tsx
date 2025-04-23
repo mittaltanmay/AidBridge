@@ -5,6 +5,7 @@ import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import supabase from "../../config/supabaseClient";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const NUM_NGO_MARKERS=10;
 export default function LocateNgo(){
@@ -77,6 +78,7 @@ export default function LocateNgo(){
   };
   
   return (
+    <SafeAreaView>
     <View className='items-start -mt-9 flex px-2 h-[50%] w-full gap-5'>
       <MapView
         style={{height:450,width:400}}
@@ -100,20 +102,23 @@ export default function LocateNgo(){
         ))}
       </MapView>   
       <Text className='ml-10 text-red-600'>*click on red marker for more information</Text>
-      <View className='ml-5 flex flex-col items-start w-full'>
-        <View className='flex flex-row gap-2'>
-          <Text className='text-green-600 font-outfit-semibold text-xl'>NGO Name:-</Text>
-          <Text className='font-outfit-semibold text-xl'>{selectedNgo?.name}</Text>
-        </View>
-        <View className='flex flex-row gap-2'>
-          <Text className='text-green-600 font-outfit-semibold text-xl'>Contact Details</Text>
-          <Text className='font-outfit-semibold text-xl'>{selectedNgo?.contact}</Text>
-        </View>
-        <View className='flex flex-row gap-2'>
-          <Text className='text-green-600 font-outfit-semibold text-xl'>Rating</Text>
-          <Text className='font-outfit-semibold text-xl'>{selectedNgo?.rating}</Text>
-        </View>
-      </View>
-    </View>
+          <View className='px-5 flex flex-col items-start gap-1 flex-wrap'>
+              <View className='flex flex-row gap-1 flex-wrap'>
+                <Text className='text-green-600 font-outfit-semibold text-xl'>NGO Name:</Text>
+                <Text className='font-outfit-semibold text-xl'>{selectedNgo?.name}</Text>
+              </View>
+              <View className='flex flex-row gap-2'>
+                <Text className='text-green-600 font-outfit-semibold text-xl'>Contact Details:</Text>
+                <Text className='font-outfit-semibold text-xl'>{selectedNgo?.contact}</Text>
+              </View>
+              {selectedNgo?.rating && 
+              <View className='flex flex-row gap-2'>
+                <Text className='text-green-600 font-outfit-semibold text-xl'>Rating:</Text>
+                <Text className='font-outfit-semibold text-xl'>{selectedNgo?.rating}</Text>
+              </View>
+              }
+            </View>
+       </View>
+    </SafeAreaView>
   )
 }

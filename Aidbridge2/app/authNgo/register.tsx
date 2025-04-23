@@ -1,4 +1,4 @@
-import { View, Text ,StyleSheet,Dimensions,TouchableOpacity, KeyboardAvoidingView,Platform, Modal ,ScrollView,Image, TextInput, Pressable} from 'react-native'
+import { View, Text ,StyleSheet,Dimensions,TouchableOpacity, KeyboardAvoidingView,Platform, Modal ,ScrollView,Image, TextInput, Pressable, Alert} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -47,7 +47,10 @@ interface NGOData {
 
 function handleregister() 
 {
-  if(!NGO_id || !NGO_name || !ngocontact || !ngopassword || !ngostate) return;
+  if(!NGO_id || !NGO_name || !ngocontact || !ngopassword || !ngostate || !ngolocation)
+  {
+    Alert.alert('Please enter complete information!!!')
+  }
   const state_input=ngostate[0].toUpperCase();
   setngostate(state_input);
   console.log(NGO_id,NGO_name,ngocontact,ngopassword);
