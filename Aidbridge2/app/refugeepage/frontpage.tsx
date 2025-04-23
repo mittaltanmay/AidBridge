@@ -46,6 +46,7 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   // console.log('🎯 Upcoming Enrolled Events:', enrolledEventsList);
   // console.log('🎯 Past Events to Rate:', pastEventsList); 
   const [ratings, setRatings] = useState<{ [key: number]: number }>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const addRatingToEvent = async (eventId, newRating) => {
     const { data: eventData, error: fetchError } = await supabase
@@ -99,6 +100,7 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   function handlesumbit(id)
   {
     addRatingToEvent(id, ratings[id]);
+    setIsSubmitted(true);
     console.log("ratings submitted",ratings[id]);
   }
   return (

@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet, Platform} from 'react-native'
+import { View, Text,StyleSheet, Platform, ScrollView} from 'react-native'
 import MapView, {PROVIDER_GOOGLE, Marker, Region} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -9,8 +9,8 @@ import supabase from "../../config/supabaseClient";
 const NUM_NGO_MARKERS=10;
 export default function LocateNgo(){
   const [location, setLocation] = useState<Region | null>(null);
-  const [ngoMarkers, setNgoMarkers] = useState<{ latitude: number; longitude: number; name: string,contact:string }[]>([]);
-  const [selectedNgo, setSelectedNgo] = useState<{ name: string; contact: string } | null>(null);
+  const [ngoMarkers, setNgoMarkers] = useState<{ latitude: number; longitude: number; name: string,contact:string, rating: number }[]>([]);
+  const [selectedNgo, setSelectedNgo] = useState<{ name: string; contact: string, rating: number } | null>(null);
   useEffect(() => {
     const fetchLocation = async () => {
       if(location) return;
@@ -65,9 +65,10 @@ export default function LocateNgo(){
           longitude,
           name: NGO.NGO_name as string,
           contact: String(NGO.ngocontact),
+          rating: NGO.Avg_rating,
         };        
       }).filter(
-        (ngo): ngo is { latitude: number; longitude: number; name: string; contact: string } =>
+        (ngo): ngo is { latitude: number; longitude: number; name: string; contact: string, rating: number } =>
           ngo !== null);
     } catch (err) {
       console.error("Error in fetching NGOs:", err);
@@ -94,7 +95,7 @@ export default function LocateNgo(){
           key={index} coordinate={marker} 
           title={marker.name} 
           pinColor="red"
-          onPress={()=>setSelectedNgo({ name: marker.name,contact:marker.contact })} 
+          onPress={()=>setSelectedNgo({ name: marker.name,contact:marker.contact, rating: marker.rating })} 
           />
         ))}
       </MapView>   
@@ -107,6 +108,10 @@ export default function LocateNgo(){
         <View className='flex flex-row gap-2'>
           <Text className='text-green-600 font-outfit-semibold text-xl'>Contact Details</Text>
           <Text className='font-outfit-semibold text-xl'>{selectedNgo?.contact}</Text>
+        </View>
+        <View className='flex flex-row gap-2'>
+          <Text className='text-green-600 font-outfit-semibold text-xl'>Rating</Text>
+          <Text className='font-outfit-semibold text-xl'>{selectedNgo?.rating}</Text>
         </View>
       </View>
     </View>
