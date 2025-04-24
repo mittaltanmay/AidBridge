@@ -143,7 +143,7 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
         </View>
         {
           filteredPastEventsList.length > 0 && (
-            <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg w-[90%] mt-10">
+            <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg w-[100%] mt-10">
               <Text className="font-outfit-bold text-center text-xl">Rate Events You Attended</Text>
               {
                 filteredPastEventsList.map(event => (
