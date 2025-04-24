@@ -79,9 +79,9 @@ export default function LocateNgo(){
   
   return (
     <SafeAreaView>
-    <View className='items-start -mt-9 flex px-2 h-[50%] w-full gap-5'>
+    <View className='items-start -mt-9 flex px-2 h-[75%] w-full gap-5'>
       <MapView
-        style={{height:450,width:400}}
+        style={{height:'75%',width:400}}
         provider={PROVIDER_GOOGLE}
         region={location || {
           latitude: 28.6139, 

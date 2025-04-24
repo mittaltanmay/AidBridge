@@ -1,18 +1,16 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Event }  from './Events';
 import { faStar } from '@fortawesome/free-solid-svg-icons'; 
 import supabase from "../../config/supabaseClient";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface frontpageprops{
   events: Event[];
   enrolledEvents:{ [key:string]:boolean };
 }
 export default function FrontPage({events, enrolledEvents}:frontpageprops){
-
-  // console.log('📌 Events in FrontPage:', events);
-  // console.log('📌 Enrolled Events in FrontPage:', enrolledEvents);
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0); 
@@ -38,17 +36,32 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   .filter(event => parseDate(event.date) >= currentDate)
   .sort((a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime());
 
-  const pastEventsList = events
+  let pastEventsList = events
     .filter(event => enrolledEvents[String(event.id)])
     .filter(event => parseDate(event.date) < currentDate)
     .sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime()); 
-
-  // console.log('🎯 Upcoming Enrolled Events:', enrolledEventsList);
-  // console.log('🎯 Past Events to Rate:', pastEventsList); 
+ 
   const [ratings, setRatings] = useState<{ [key: number]: number }>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const addRatingToEvent = async (eventId, newRating) => {
+  const [localPastEvents, setLocalPastEvents] = useState(pastEventsList);
+  const [ratedEventIds, setRatedEventIds] = useState<Set<number>>(new Set()); // 🟢 ADDED
+  const filteredPastEventsList = pastEventsList.filter(event => !ratedEventIds.has(event.id)); // 🟢 ADDED
+  useEffect(() => {
+    const loadRatedIds = async () => {
+      const stored = await AsyncStorage.getItem('ratedEventIds');
+      if (stored) {
+        setRatedEventIds(new Set(JSON.parse(stored))); // 🟢 Restores Set
+      }
+    };
+    loadRatedIds();
+  }, []);
+  
+  const storeRatedId = async (id: number) => {
+    const newSet = new Set(ratedEventIds);
+    newSet.add(id);
+    setRatedEventIds(newSet);
+    await AsyncStorage.setItem('ratedEventIds', JSON.stringify(Array.from(newSet))); // 🟢 Save to AsyncStorage
+  };
+  const addRatingToEvent = async (eventId, newRating:number) => {
     const { data: eventData, error: fetchError } = await supabase
       .from('Events')
       .select('Ratings, NGO_id')
@@ -96,12 +109,13 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
   }
 
   };
-  
+  // console.log(localPastEvents);
   function handlesumbit(id)
   {
     addRatingToEvent(id, ratings[id]);
-    setIsSubmitted(true);
     console.log("ratings submitted",ratings[id]);
+    storeRatedId(id);
+    // console.log(ratedEventIds);
   }
   return (
     <View className="flex flex-col gap-10 items-center py-2 px-2">
@@ -128,12 +142,12 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
           ))}
         </View>
         {
-          pastEventsList.length > 0 && (
-            <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg w-[370] mt-10">
+          filteredPastEventsList.length > 0 && (
+            <View className="flex flex-col border py-2 px-2 gap-5 rounded-lg w-[90%] mt-10">
               <Text className="font-outfit-bold text-center text-xl">Rate Events You Attended</Text>
               {
-                pastEventsList.map(event => (
-                  <View key={event.id} className="flex flex-col border px-1 py-2 rounded-lg bg-white shadow-md">
+                filteredPastEventsList.map(event => (
+                  <View key={event.id} className="flex flex-col border px-1 py-2 rounded-lg bg-white">
                     <Text className="font-outfit-bold text-xl text-green-600">{event.event_name}</Text>
                     <Text className="font-outfit-bold text-green-600 text-xl">
                       Organized by: <Text className="text-black font-outfit-medium">{event.NGO.NGO_name}</Text>
@@ -147,7 +161,7 @@ export default function FrontPage({events, enrolledEvents}:frontpageprops){
                           <View className='border ml-2 rounded-md mt-1'>
                               <Picker
                                 selectedValue={ratings[event.id] ?? 0}
-                                onValueChange={(value) => setRatings(prev => ({ ...prev, [event.id]: value }))}
+                                onValueChange={(value:number) => setRatings(prev => ({ ...prev, [event.id]: value }))}
                                 style={{ height: 49, width: 100}}
                                 mode="dropdown">
                                 {[0, 1, 2, 3, 4, 5].map(rating => (

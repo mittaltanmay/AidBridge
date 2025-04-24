@@ -7,7 +7,6 @@ interface EventsProps {
   events: Event[];
   setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
   enrolledEvents: { [key: string]: boolean };
-  // setEnrolledEvents: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
   enrollEvent: (eventId: string) => void;
 }
 
@@ -28,7 +27,7 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
-
+  const today = new Date().toISOString().split('T')[0];
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
@@ -43,6 +42,7 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
         .from('Events')
         .select('id, event_name, Description, date, time, NGO_id, NGO!inner(NGO_name, ngostate)') // Joining NGOs table to get NGO name
         .ilike('NGO.ngostate', ref_state)
+        .gt('date',today)
         .order('date', { ascending: true }); // Sorting by date
 
         console.log("ref_state:", ref_state);
@@ -78,7 +78,7 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
     <View className="flex flex-col gap-10 items-center py-2 px-1">
       <ScrollView>
         <View className="flex flex-col border py-2 px-2 w-[380] gap-5 rounded-lg">
-          <Text className="font-outfit-bold text-center text-xl">Listed Events</Text>
+          <Text className="font-outfit-bold text-center text-xl">Upcoming Events</Text>
 
           {loading ? (
             <ActivityIndicator size="large" color="#4CAF50" />

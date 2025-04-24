@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import {useFonts} from "expo-font";
 // Import your global CSS file
 import "../global.css";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function RootLayout() {
     const [fontsLoaded]=useFonts({
     'outfit':require("./../assets/fonts/Outfit-Regular.ttf"),
@@ -15,7 +16,9 @@ export default function RootLayout() {
     'outfit-semibold':require("./../assets/fonts/Outfit-SemiBold.ttf")
   })
   return (
-    <Stack screenOptions={{headerShown:false}}>
-  </Stack>
+    <SafeAreaView style={{flex:1}}>
+      <Stack screenOptions={{headerShown:false}}>
+      </Stack>
+    </SafeAreaView>
   );
 }
