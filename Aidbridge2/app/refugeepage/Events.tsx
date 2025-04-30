@@ -38,11 +38,16 @@ export default function Events({events, enrolledEvents, enrollEvent, setEvents }
       }
       const userData = JSON.parse(userDataString);
       const ref_state = userData.selectedState;
+
+      const today = new Date();
+      const formattedToday = `${today.getFullYear()}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`;
+
+
       const { data, error } = await supabase
         .from('Events')
         .select('id, event_name, Description, date, time, NGO_id, NGO!inner(NGO_name, ngostate)') // Joining NGOs table to get NGO name
         .ilike('NGO.ngostate', ref_state)
-        .gt('date',today)
+        .gt('date',formattedToday)
         .order('date', { ascending: true }); // Sorting by date
 
         console.log("ref_state:", ref_state);
